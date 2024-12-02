@@ -2,7 +2,7 @@
     "name": "bullet-dash",
     "version": "1.0.0",
     "description": "buller-hell game made for the best course ever",
-    "main": "main.js",
+    "main": "static/scripts/main.js",
     "scripts": {
         "start": "electron .",
         "test": "echo \"Error: no test specified\" && exit 1"
