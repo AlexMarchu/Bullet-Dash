@@ -14,6 +14,9 @@ import Game from "./game/game.ts";
 
 export default {
     name: "App",
+    mounted() {
+        this.startGame();
+    },
     methods: {
         startGame() {
             const config = {
@@ -22,6 +25,13 @@ export default {
                 height: 600,
                 parent: "game-container",
                 scene: Game,
+                physics: {
+                    default: "arcade",
+                    arcade: {
+                        gravity: { x: 0, y: 0 },
+                        debug: false,
+                    },
+                },
             };
 
             new Phaser.Game(config);
