@@ -14,6 +14,9 @@ import Game from "./game/game.ts";
 
 export default {
     name: "App",
+    mounted() {
+        this.startGame();
+    },
     methods: {
         startGame() {
             const config = {
@@ -25,7 +28,7 @@ export default {
                 physics: {
                     default: "arcade",
                     arcade: {
-                        gravity: { y: 0 },
+                        gravity: { x: 0, y: 0 },
                         debug: false,
                     },
                 },
