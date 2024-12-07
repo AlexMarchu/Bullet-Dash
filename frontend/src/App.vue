@@ -22,6 +22,13 @@ export default {
                 height: 600,
                 parent: "game-container",
                 scene: Game,
+                physics: {
+                    default: "arcade",
+                    arcade: {
+                        gravity: { y: 0 },
+                        debug: false,
+                    },
+                },
             };
 
             new Phaser.Game(config);

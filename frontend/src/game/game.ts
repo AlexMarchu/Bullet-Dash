@@ -1,20 +1,21 @@
 import Phaser from "phaser";
+import Player from "./modules/player";
 
 export default class Game extends Phaser.Scene {
+    private player!: Player;
     constructor() {
         super("Game");
     }
 
     preload() {
-        // Загрузка ресурсов
+        this.load.image("player", "game/assets/images/player.png")
     }
 
     create() {
-        // Создание объектов игры
-        this.add.text(100, 100, "Hello Phaser", { color: "#ffffff" });
+        this.player = new Player(this, this.game.config.width as number / 2, this.game.config.height as number / 2, "player");
     }
 
     update() {
-        // Обновление логики игры
+        this.player.update();
     }
 }
