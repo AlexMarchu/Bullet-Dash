@@ -4,12 +4,11 @@
 
 <script>
 import Phaser from "phaser";
-import Game from "./game/game.ts";
+import Game from "../game/game.ts";
 
 export default {
-    name: "App",
-    mounted() {
-        this.startGame();
+    created() {
+        this.$on('start', this.startGame);
     },
     methods: {
         startGame() {
