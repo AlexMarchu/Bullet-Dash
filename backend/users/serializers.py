@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
+
+User = get_user_model()
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -10,3 +12,15 @@ class LoginSerializer(serializers.Serializer):
         if user and user.is_active:
             return user
         raise serializers.ValidationError("Incorrect user data")
+    
+    def create(self, validated_data):
+        user = User.objects.create(
+            username=validated_data["username"],
+            password=validated_data["password"],
+        )
+        return user
+    
+
+class ScoreSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    score = serializers.IntegerField()
