@@ -1,11 +1,5 @@
 <template>
-    <div id="app">
-        <div id="game-container"></div>
-        <div>
-            <h1>Bullet Dash</h1>
-            <button @click="startGame">Start Game</button>
-        </div>
-    </div>
+    <div id="game-container"></div>
 </template>
 
 <script>
