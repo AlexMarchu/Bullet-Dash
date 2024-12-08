@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import Player from "./player";
 
 export default class Game extends Phaser.Scene {
     private player!: Phaser.Physics.Arcade.Sprite;
@@ -14,7 +15,7 @@ export default class Game extends Phaser.Scene {
     }
 
     preload() {
-        // Загрузка ресурсов
+        this.load.image("player", "assets/player.png");
     }
 
     create() {
