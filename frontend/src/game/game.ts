@@ -190,6 +190,7 @@ class OBB {
 
 
 export default class Game extends Phaser.Scene {
+    
     private player!: Phaser.Physics.Arcade.Sprite;
     private keyW!: Phaser.Input.Keyboard.Key;
     private keyA!: Phaser.Input.Keyboard.Key;
