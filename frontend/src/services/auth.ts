@@ -3,47 +3,103 @@ import axios from "axios";
 const URL = "http://localhost:8000/api";
 
 class AuthService {
-    login(username: string, password: string) {
-        return axios
-            .post(`${URL}/login/`, {
+    async login(username: string, password: string) {
+        try {
+            const response = await axios.post(`${URL}/login/`, {
                 username: username,
                 password: password,
-            })
-            .then((response) => {
-                if (response.status != 200) return false;
-
-                localStorage.setItem("username", username);
-                localStorage.setItem("password", password);
-                return true;
             });
+
+            if (response.status !== 200) return false;
+
+            localStorage.setItem("username", username);
+            localStorage.setItem("password", password);
+            return true;
+        } catch (error) {
+            console.error("Ошибка авторизации: ", error);
+            return false;
+        }
     }
 
-    updateUserScore(score: number) {
-        return axios
-            .post(`${URL}/score/update_score/`, {
+    async updateUserScore(score: number) {
+        try {
+            const response = await axios.post(`${URL}/score/update_score/`, {
                 score: score,
-            })
-            .then((response) => {
-                return response.status == 200;
             });
+            return response.status === 200;
+        } catch (error) {
+            console.error("Ошибка обновления счета: ", error);
+            return false;
+        }
     }
 
-    getUserScore() {
-        return axios
-            .get(`${URL}/score/get_score/`, {
+    async getUserScore() {
+        try {
+            const response = await axios.get(`${URL}/score/get_score/`, {
                 params: {
                     username: localStorage.getItem("username"),
                 },
-            })
-            .then((response) => {
-                if (response.status != 200) return -1;
-                return response.data["score"];
             });
+
+            if (response.status !== 200) return -1;
+            return response.data["score"];
+        } catch (error) {
+            console.error("Ошибка получения счета: ", error);
+            return -1;
+        }
     }
 
-    getUsersScores() {
-        return axios.get(`${URL}/score/get_users_scores/`);
+    async getUsersScores() {
+        try {
+            const response = await axios.get(`${URL}/score/get_users_scores/`);
+            return response.data;
+        } catch (error) {
+            console.error("Ошибка получения счетов пользователей: ", error);
+            return null;
+        }
     }
+
+    // login(username: string, password: string) {
+    //     return axios
+    //         .post(`${URL}/login/`, {
+    //             username: username,
+    //             password: password,
+    //         })
+    //         .then((response) => {
+    //             if (response.status != 200) return false;
+
+    //             localStorage.setItem("username", username);
+    //             localStorage.setItem("password", password);
+    //             return true;
+    //         });
+    // }
+
+    // updateUserScore(score: number) {
+    //     return axios
+    //         .post(`${URL}/score/update_score/`, {
+    //             score: score,
+    //         })
+    //         .then((response) => {
+    //             return response.status == 200;
+    //         });
+    // }
+
+    // getUserScore() {
+    //     return axios
+    //         .get(`${URL}/score/get_score/`, {
+    //             params: {
+    //                 username: localStorage.getItem("username"),
+    //             },
+    //         })
+    //         .then((response) => {
+    //             if (response.status != 200) return -1;
+    //             return response.data["score"];
+    //         });
+    // }
+
+    // getUsersScores() {
+    //     return axios.get(`${URL}/score/get_users_scores/`);
+    // }
 }
 
 export default new AuthService();
