@@ -9,6 +9,9 @@ module.exports = {
     },
     resolve: {
         extensions: [".ts", ".js", ".vue"],
+        alias: {
+            "@": path.resolve(__dirname, "src"),
+        },
     },
     module: {
         rules: [
@@ -23,7 +26,5 @@ module.exports = {
             },
         ],
     },
-    plugins: [
-        new VueLoaderPlugin(),
-    ],
+    plugins: [new VueLoaderPlugin()],
 };
