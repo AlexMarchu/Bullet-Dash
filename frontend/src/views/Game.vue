@@ -8,7 +8,7 @@ import Game from "../game/game.ts";
 
 export default {
     created() {
-        this.$on('start', this.startGame);
+        this.startGame();
     },
     methods: {
         startGame() {

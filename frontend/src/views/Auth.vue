@@ -1,13 +1,13 @@
 <template>
     <div id="login-form">
-        <input type="text" v-model="username" placeholder="Username" />
-        <input type="password" v-model="password" placeholder="Password" />
+        <input type="text" v-model="username" placeholder="Username"/>
+        <input type="password" v-model="password" placeholder="Password"/>
         <button id="login-button" @click="login">Войти</button>
     </div>
 </template>
 
 <script>
-import authService from "./services/auth.ts";
+import authService from "@/services/auth.ts";
 
 export default {
     data() {
@@ -21,11 +21,28 @@ export default {
             // const status = await authService.login();
             const status = true;
             if (status) {
+                this.$router.push("/game");
             } else {
+                alert("SOME SHIT HAPPENED!");
             }
-        },
+        }
     },
 };
 </script>
 
-<style></style>
+<style>
+    #login-form {
+        width: 200px;
+        display: flex;
+        flex-direction: column;
+        row-gap: 5pt;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    #login-button {
+        background-color: #3bff73;
+    }
+</style>
