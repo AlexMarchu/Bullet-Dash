@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Auth from "@/views/Auth.vue";
-import Game from "@/views/Game.vue";
+import Login from "@/views/Login.vue";
 import Menu from "@/views/Menu.vue";
+import Game from "@/views/Game.vue";
+import Rating from "@/views/Rating.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -9,7 +10,12 @@ const router = createRouter({
         {
             path: "/login",
             name: "login",
-            component: Auth,
+            component: Login,
+        },
+        {
+            path: "/menu",
+            name: "menu",
+            component: Menu,
         },
         {
             path: "/game",
@@ -17,9 +23,9 @@ const router = createRouter({
             component: Game,
         },
         {
-            path: "/menu",
-            name: "menu",
-            component: Menu,
+            path: "/rating",
+            name: "rating",
+            component: Rating,
         }
     ],
 });

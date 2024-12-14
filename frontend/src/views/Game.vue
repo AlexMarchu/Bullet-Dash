@@ -7,10 +7,19 @@ import Phaser from "phaser";
 import Game from "../game/game.ts";
 
 export default {
-    created() {
+    mounted() {
+        window.addEventListener('keyup', this.handleKeyEsc);
         this.startGame();
     },
+    beforeUnmount() {
+        window.removeEventListener('keyup', this.handleKeyEsc);
+    },
     methods: {
+        handleKeyEsc(event) {
+            if (event.key === 'Escape') {
+                this.$router.push("/menu");
+            }
+        },
         startGame() {
             const config = {
                 type: Phaser.AUTO,

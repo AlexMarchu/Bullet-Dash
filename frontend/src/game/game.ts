@@ -1,6 +1,5 @@
 import Phaser from "phaser";
 
-
 class Projectile {
     x: number;
     y: number;
