@@ -18,8 +18,7 @@ export default {
     },
     methods: {
         async login() {
-            // const status = await authService.login();
-            const status = true;
+            const status = await authService.login(this.username, this.password);
             if (status) {
                 this.$router.push("/menu");
             } else {
