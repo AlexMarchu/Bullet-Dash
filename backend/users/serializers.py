@@ -8,16 +8,19 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField()
 
     def validate(self, data):
-        user = authenticate(**data)
-        if user and user.is_active:
-            return user
-        raise serializers.ValidationError("Incorrect user data")
-    
-    def create(self, validated_data):
-        user = User.objects.create(
-            username=validated_data["username"],
-            password=validated_data["password"],
-        )
+        user = authenticate(username=data['username'], password=data['password'])
+
+        if user is None:
+            try:
+                user = User.objects.create_user(
+                    username=data['username'],
+                    password=data['password']
+                )
+            except Exception as exception:
+                raise serializers.ValidationError(f"Failed to create user: {str(exception)} :(")
+            
+        if not user.is_active:
+            raise serializers.ValidationError("User is not active :(")
         return user
     
 
