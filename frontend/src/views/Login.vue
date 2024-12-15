@@ -1,10 +1,10 @@
 <template>
-    <div id="login-form">
-        <input type="text" v-model="username" placeholder="Username" />
-        <input type="password" v-model="password" placeholder="Password" />
-        <button id="login-button" @click="login">Войти</button>
-        <div v-if="errorMessage" id="error-message">{{ errorMessage }}</div>
-    </div>
+<div id="login-form">
+    <input type="text" v-model="username" placeholder="Username" />
+    <input type="password" v-model="password" placeholder="Password" />
+    <button id="login-button" @click="login">Войти</button>
+    <div v-if="errorMessage" id="error-message">{{ errorMessage }}</div>
+</div>
 </template>
 
 <script>
@@ -35,12 +35,10 @@ export default {
                 this.username,
                 this.password
             );
-            // const status = true;
             if (status) {
                 this.$router.push("/menu");
             } else {
                 this.errorMessage = "Введен неправильный пароль";
-                // alert("Упс! Что-то пошло не так...");
             }
         },
     },

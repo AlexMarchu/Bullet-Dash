@@ -1,9 +1,9 @@
 <template>
-    <div id="wrapper">
-        <button id="play-button" @click="startGame">Играть</button>
-        <button id="rating-button" @click="openRating">Рейтинг</button>
-        <button id="logout-button" @click="logout">Сменить аккаунт</button>
-    </div>
+<div id="wrapper">
+    <button id="play-button" @click="startGame">Играть</button>
+    <button id="rating-button" @click="openRating">Рейтинг</button>
+    <button id="logout-button" @click="logout">Сменить аккаунт</button>
+</div>
 </template>
 
 <script>
