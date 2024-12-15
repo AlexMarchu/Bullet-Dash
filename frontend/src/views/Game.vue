@@ -4,9 +4,13 @@
 
 <script>
 import Phaser from "phaser";
-import Game from "../game/game.ts";
+import Game from "@/game/game.ts";
+import authService from "@/services/auth.ts";
 
 export default {
+    data() {
+        game: Phaser.Game;
+    },
     mounted() {
         window.addEventListener('keyup', this.handleKeyEsc);
         this.startGame();
@@ -17,6 +21,8 @@ export default {
     methods: {
         handleKeyEsc(event) {
             if (event.key === 'Escape') {
+                authService.updateUserScore(this.game.scene.getScene('Game').getScore());
+                this.game.destroy();
                 this.$router.push("/menu");
             }
         },
@@ -40,7 +46,7 @@ export default {
                 }
             };
 
-            new Phaser.Game(config);
+            this.game = new Phaser.Game(config);
         },
     },
 };

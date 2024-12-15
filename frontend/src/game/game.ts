@@ -211,11 +211,15 @@ export default class Game extends Phaser.Scene {
     private screenSize!: { width: number; height: number };
     private speed: number = 2;
     private attacks!: Attacks;
-    private score: number = 0;
+    private timeElapsed: number = 0;
     private scoreText!: Phaser.GameObjects.Text;
 
     constructor() {
         super("Game");
+    }
+
+    getScore() {
+        return Math.floor(this.timeElapsed / 30);
     }
 
     preload() {
@@ -271,8 +275,8 @@ export default class Game extends Phaser.Scene {
             }
         });
         
-        this.score = Math.max(0, Math.floor(time / 600) - 4);
-        this.scoreText.text = `Score: ${this.score}`;
+        this.timeElapsed++;
+        this.scoreText.text = `Score: ${this.getScore()}`;
     }
 
     private movePlayer(): void {
