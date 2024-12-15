@@ -1,5 +1,5 @@
 <template>
-    <div id="game-container"></div>
+<div id="game-container"></div>
 </template>
 
 <script>
@@ -23,9 +23,9 @@ export default {
         startGame() {
             const config = {
                 type: Phaser.AUTO,
+                parent: "game-container",
                 width: 800,
                 height: 600,
-                parent: "game-container",
                 scene: Game,
                 physics: {
                     default: "arcade",
@@ -34,6 +34,10 @@ export default {
                         debug: false,
                     },
                 },
+                scale: {
+                    mode: Phaser.Scale.RESIZE,
+                    autoCenter: Phaser.Scale.NO_CENTER,
+                }
             };
 
             new Phaser.Game(config);
@@ -43,5 +47,11 @@ export default {
 </script>
 
 <style>
-
+#game-container {
+    width: 100%; 
+    height: 100%; 
+    position: fixed;
+    top: 0; 
+    left: 0;
+}
 </style>

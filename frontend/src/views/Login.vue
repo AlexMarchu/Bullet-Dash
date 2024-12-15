@@ -18,11 +18,12 @@ export default {
     },
     methods: {
         async login() {
-            const status = await authService.login(this.username, this.password);
+            // const status = await authService.login(this.username, this.password);
+            const status = true;
             if (status) {
                 this.$router.push("/menu");
             } else {
-                alert("SOME SHIT HAPPENED!");
+                alert("Упс! Что-то пошло не так...");
             }
         }
     },
