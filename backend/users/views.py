@@ -37,7 +37,7 @@ class ScoreView(viewsets.ViewSet):
     def update_score(self, request):
         username = request.data.get("username")
         user = User.objects.get(username=username)
-        user.score = request.data.get("score")
+        user.score = max(user.score, request.data.get("score"))
         user.save()
         return Response({"status": "Score updated"})
     

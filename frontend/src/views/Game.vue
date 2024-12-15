@@ -21,7 +21,7 @@ export default {
     methods: {
         handleKeyEsc(event) {
             if (event.key === 'Escape') {
-                authService.updateUserScore(this.game.scene.getScene('Game').getScore());
+                authService.updateUserScore(localStorage.getItem("username"), this.game.scene.getScene('Game').getScore());
                 this.game.destroy();
                 this.$router.push("/menu");
             }

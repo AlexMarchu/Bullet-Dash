@@ -23,9 +23,10 @@ class AuthService {
         }
     }
 
-    async updateUserScore(score: number) {
+    async updateUserScore(username: string, score: number) {
         try {
             const response = await axios.post(`${URL}/score/update_score/`, {
+                username: username,
                 score: score,
             });
             return response.status === 200;
