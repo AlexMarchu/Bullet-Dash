@@ -3,7 +3,6 @@ import axios from "axios";
 const URL = "http://localhost:8000/api";
 
 class AuthService {
-    
     async login(username: string, password: string) {
         try {
             const response = await axios.post(`${URL}/login/`, {
@@ -11,11 +10,13 @@ class AuthService {
                 password: password,
             });
 
-            if (response.status !== 200) return false;
+            if (response.status === 200 && response.data.token) {
+                localStorage.setItem("token", response.data.token);
+                localStorage.setItem("username", username);
+                return true;
+            }
 
-            localStorage.setItem("username", username);
-            localStorage.setItem("password", password);
-            return true;
+            return false;
         } catch (error) {
             console.error("Ошибка авторизации: ", error);
             return false;
@@ -59,7 +60,6 @@ class AuthService {
             return null;
         }
     }
-
 }
 
 export default new AuthService();
