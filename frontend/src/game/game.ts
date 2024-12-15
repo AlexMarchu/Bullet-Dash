@@ -128,7 +128,6 @@ export class Attacks {
     }
 }
 
-
 class Projectile {
     x: number;
     y: number;
@@ -202,7 +201,6 @@ class Projectile {
     }
 }
 
-
 export default class Game extends Phaser.Scene {
     private player!: Phaser.Physics.Arcade.Sprite;
     private keyW!: Phaser.Input.Keyboard.Key;
@@ -213,7 +211,8 @@ export default class Game extends Phaser.Scene {
     private screenSize!: { width: number; height: number };
     private speed: number = 2;
     private attacks!: Attacks;
-    private timeElapsed: number = 0;
+    private score: number = 0;
+    private scoreText!: Phaser.GameObjects.Text;
 
     constructor() {
         super("Game");
@@ -237,7 +236,8 @@ export default class Game extends Phaser.Scene {
 
         this.attacks = new Attacks(this);
 
-        this.add.text(20, 20, 'Time: 0', { font: '16px Arial', color: '#ffffff' });
+        this.scoreText = this.add.text(20, 20, 'Score: 0', { font: '18px Roboto', color: '#ffffff' });
+        this.scoreText.setDepth(1);
 
         if (this.input.keyboard) {
             this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
@@ -270,13 +270,9 @@ export default class Game extends Phaser.Scene {
                 }
             }
         });
-
-        this.timeElapsed += delta;
-        const timeText = this.add.text(20, 20, `Time: ${(this.timeElapsed / 1000).toFixed(2)}s`, {
-            font: "16px Arial",
-            color: "#ffffff",
-        });
-        timeText.setDepth(1);
+        
+        this.score = Math.max(0, Math.floor(time / 600) - 4);
+        this.scoreText.text = `Score: ${this.score}`;
     }
 
     private movePlayer(): void {
