@@ -1,8 +1,9 @@
 <template>
 <div id="login-form">
-    <input type="text" v-model="username" placeholder="Username"/>
-    <input type="password" v-model="password" placeholder="Password"/>
+    <input type="text" v-model="username" placeholder="Username" />
+    <input type="password" v-model="password" placeholder="Password" />
     <button id="login-button" @click="login">Войти</button>
+    <div v-if="errorMessage" id="error-message">{{ errorMessage }}</div>
 </div>
 </template>
 
@@ -14,18 +15,32 @@ export default {
         return {
             username: "",
             password: "",
+            errorMessage: "",
         };
+    },
+    created() {
+        const token = localStorage.getItem("token");
+        const username = localStorage.getItem("username");
+
+        if (token) {
+            this.$router.push("/menu");
+        } else if (username) {
+            this.username = username;
+        }
     },
     methods: {
         async login() {
-            // const status = await authService.login(this.username, this.password);
-            const status = true;
+            this.errorMessage = "";
+            const status = await authService.login(
+                this.username,
+                this.password
+            );
             if (status) {
                 this.$router.push("/menu");
             } else {
-                alert("Упс! Что-то пошло не так...");
+                this.errorMessage = "Введен неправильный пароль";
             }
-        }
+        },
     },
 };
 </script>
@@ -44,5 +59,12 @@ export default {
 
 #login-button {
     background-color: #f06640;
+}
+
+#error-message {
+    color: red;
+    margin-top: 0.1rem;
+    font-size: smaller;
+    text-align: center;
 }
 </style>
