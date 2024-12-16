@@ -49,6 +49,5 @@ class ScoreView(viewsets.ViewSet):
     
     @action(detail=False, methods=["get"])
     def get_users_scores(self, request):
-        users = User.objects.all()
-        scores = list({"username": user.username, "score": user.score} for user in users)
-        return Response(scores)
+        users = User.objects.values("username", "score").order_by("-score")
+        return Response(list(users))
