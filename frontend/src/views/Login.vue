@@ -59,7 +59,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #login-form {
     width: 260px;
     display: flex;

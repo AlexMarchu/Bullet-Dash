@@ -52,7 +52,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #game-container {
     width: 100%; 
     height: 100%; 
