@@ -248,7 +248,7 @@ export default class Game extends Phaser.Scene {
             screenWidth / 2,
             screenHeight / 2,
             '0',
-            { font: '64px Roboto', color: '#ffffff' }
+            { font: '96px Pixeboy', color: '#ffffff' }
         ).setOrigin(0.5, 0.5);
         this.scoreText.setDepth(1);
 
