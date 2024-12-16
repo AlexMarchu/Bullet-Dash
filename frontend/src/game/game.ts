@@ -153,7 +153,7 @@ class Projectile {
         this.x = x;
         this.y = y;
         this.obsType = obsType;
-        this.speed = speed;
+        this.speed = speed / 3;
         this.size = size;
         this.offscreenDisable = offscreenDisable;
 
@@ -161,8 +161,8 @@ class Projectile {
         this.startVector = new Phaser.Math.Vector2(x, y);
         this.endVector = endLoc;
 
-        this.rotation = Phaser.Math.RadToDeg(Math.atan2(y - endLoc.y, endLoc.x - x));
-        this.img.setRotation(Phaser.Math.DegToRad(this.rotation));
+        this.rotation = Math.atan2(endLoc.y - y, endLoc.x - x);
+        this.img.setRotation(this.rotation);
     }
 
     move(): void {
