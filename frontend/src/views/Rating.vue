@@ -24,21 +24,21 @@ export default {
     data() {
         return {
             usersData: [{
-                username: '',
+                username: "",
                 score: 0
             }]
         };
     },
     mounted() {
         this.fetchUsersScores();
-        window.addEventListener('keyup', this.handleKeyEsc);
+        window.addEventListener("keydown", this.handleKeyEsc);
     },
     beforeUnmount() {
-        window.removeEventListener('keyup', this.handleKeyEsc);
+        window.removeEventListener("keydown", this.handleKeyEsc);
     },
     methods: {
         handleKeyEsc(event) {
-            if (event.key === 'Escape') {
+            if (event.key === "Escape") {
                 this.$router.push("/menu");
             }
         },

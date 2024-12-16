@@ -18,7 +18,7 @@ export default {
             errorMessage: "",
         };
     },
-    created() {
+    mounted() {
         const token = localStorage.getItem("token");
         const username = localStorage.getItem("username");
 
@@ -27,9 +27,23 @@ export default {
         } else if (username) {
             this.username = username;
         }
+        window.addEventListener("keydown", this.handleKeyEnter);
+    },
+    beforeUnmount() {
+        window.removeEventListener("keydown", this.handleKeyEnter);
     },
     methods: {
+        handleKeyEnter(event) {
+            if (event.key === "Enter") {
+                this.login();
+            }
+        },
         async login() {
+            if (this.username === "") {
+                this.errorMessage = "Enter    nickname!";
+                return;
+            }
+
             this.errorMessage = "";
             const status = await authService.login(
                 this.username,
@@ -38,7 +52,7 @@ export default {
             if (status) {
                 this.$router.push("/menu");
             } else {
-                this.errorMessage = "Введен неправильный пароль";
+                this.errorMessage = "Wrong password!";
             }
         },
     },
@@ -46,63 +60,46 @@ export default {
 </script>
 
 <style>
-body {
-    background-color: black;
-    color: white;
-    font-family: ArcadeClassic, sans-serif;
-    font-size: 32px;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
-
 #login-form {
-    width: 300px;
+    width: 260px;
     display: flex;
     flex-direction: column;
-    row-gap: 10px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    text-align: center;
 }
 
-#title {
-    font-family: "PixelGame", sans-serif;
-    font-size: 96px;
-    color: white;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-input[type="text"],
-input[type="password"] {
+input {
     font-family: ArcadeClassic, sans-serif;
-    font-size: 24px;
-    padding: 10px 0;
-    border: none;
-    border-bottom: 2px solid white;
-    background-color: black;
+    font-size: 28px;
     color: white;
-    text-align: center;
+    padding: 2px;
+    margin: 8px;
+    border: none;
     outline: none;
+    background: transparent;
+    text-align: center;
 }
 
-input[type="text"]::placeholder,
-input[type="password"]::placeholder {
+input:focus {
+    border-left: 3px solid white;
+}
+
+input::placeholder {
     color: rgba(255, 255, 255, 0.5);
 }
 
 #login-button {
     font-family: ArcadeClassic, sans-serif;
     font-size: 24px;
-    padding: 10px;
-    border: 2px solid white;
+    padding: 8px;
+    margin: 8px;
+    border: 3px solid white;
     background-color: black;
     color: white;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.15s, color 0.15s;
 }
 
 #login-button:hover {
@@ -112,8 +109,8 @@ input[type="password"]::placeholder {
 
 #error-message {
     color: red;
-    font-size: 18px;
-    margin-top: 10px;
+    font-family: ArcadeClassic, sans-serif;
+    font-size: 20px;
     text-align: center;
 }
 </style>

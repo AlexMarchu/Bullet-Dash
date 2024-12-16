@@ -1,11 +1,11 @@
 <template>
-<div>
+<div id="wrapper">
     <div id="title">Bullet Dash</div>
-    <div id="menu-wrapper">
+    <div id="menu">
         <div
             v-for="(item, index) in menuItems"
             :key="index"
-            :class="['menu-item', { active: currentIndex === index}]"
+            :class="['menu-item', { active: currentIndex === index }]"
             @click="selectItem(index)"
         >
         {{ item.label }}
@@ -39,6 +39,9 @@ export default {
             localStorage.removeItem("token");
             this.$router.push("/login");
         },
+        quit() {
+            window.close();
+        },
         selectItem(index) {
             this.currentIndex = index;
             this.menuItems[index].action();
@@ -63,53 +66,44 @@ export default {
 </script>
 
 <style>
-body {
-    background-color: black;
-    color: rgb(89, 89, 89);
-    font-family: ArcadeClassic, sans-serif;
-    font-size: 32px;
+#wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 44%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 #title {
     cursor: default;
     user-select: none;
     font-family: "PixelGame", sans-serif;
-    font-size: 112px;
+    font-size: 100px;
     color: white;
     text-align: center;
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }
 
-#menu-wrapper {
-    width: 220px;
+#menu {
     display: flex;
     flex-direction: column;
-    text-align: center;
-    row-gap: 3pt;
-    position: absolute;
-    top: 60%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    align-items: center;
 }
 
 .menu-item {
+    font-family: ArcadeClassic, sans-serif;
+    font-size: 32px;
     cursor: pointer;
-    padding: 10px;
-    border: 2px solid transparent;
-}
-
-.menu-item.active {
-    color: white;
+    padding: 7px;
+    color: rgb(89, 89, 89);
 }
 
 .menu-item:hover {
     color: rgba(255, 255, 255, 0.7);
 }
 
-button {
-    background-color: #f06640;
+.menu-item.active {
+    color: white;
 }
 </style>

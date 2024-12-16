@@ -61,6 +61,7 @@ class AuthService {
             return null;
         }
     }
+
 }
 
 export default new AuthService();
