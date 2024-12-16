@@ -8,11 +8,11 @@
         </tr>
     </thead>
     <tbody>
-        <!-- <tr v-for="(leader, index) in leaders" :key="index">
-            <td>{{ leader.index }}</td>
-            <td>{{ leader.username }}</td>
-            <td>{{ leader.maximumMoney }}</td>
-        </tr> -->
+        <tr v-for="(user, index) in usersData" :key="index">
+            <td>{{ index }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.score }}</td>
+        </tr>
     </tbody>
 </table>
 </template>
@@ -23,7 +23,10 @@ import authService from "@/services/auth.ts";
 export default {
     data() {
         return {
-            usersData: []
+            usersData: [{
+                username: '',
+                score: 0
+            }]
         };
     },
     mounted() {
@@ -41,7 +44,6 @@ export default {
         },
         async fetchUsersScores() {
             this.usersData = await authService.getUsersScores();
-            console.log(userData);
         }
     }
 }
