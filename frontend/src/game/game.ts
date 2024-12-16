@@ -249,7 +249,7 @@ export default class Game extends Phaser.Scene {
             screenHeight / 2,
             '0',
             { font: '96px Pixeboy', color: '#ffffff' }
-        ).setOrigin(0.5, 0.5);
+        ).setOrigin(0.5, 0.6);
         this.scoreText.setDepth(1);
 
         if (this.input.keyboard) {
