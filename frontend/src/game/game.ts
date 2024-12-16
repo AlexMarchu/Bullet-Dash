@@ -213,7 +213,7 @@ export default class Game extends Phaser.Scene {
     private keyD!: Phaser.Input.Keyboard.Key;
     private projectiles!: Phaser.Physics.Arcade.Group;
     private screenSize!: { width: number; height: number };
-    private speed: number = 2;
+    private playerSpeed: number = 4;
     private attacks!: Attacks;
     private timeElapsed: number = 0;
     private scoreText!: Phaser.GameObjects.Text;
@@ -233,18 +233,23 @@ export default class Game extends Phaser.Scene {
     }
 
     create() {
-        this.player = this.physics.add.sprite(400, 300, "player").setOrigin(0.5, 0.5);
-        this.player.setDisplaySize(50, 50);
+        const screenWidth = this.sys.canvas.width;
+        const screenHeight = this.sys.canvas.height;
+
+        this.player = this.physics.add.sprite(screenWidth / 2, screenHeight / 2, "player").setOrigin(0.5, 0.5);
+        this.player.setDisplaySize(35, 35);
         this.screenSize = { width: this.sys.canvas.width, height: this.sys.canvas.height };
 
         this.projectiles = this.physics.add.group();
 
-        this.addProjectile(100, 100, "fireball", new Phaser.Math.Vector2(400, 300), 10);
-        this.addProjectile(200, 200, "arrow", new Phaser.Math.Vector2(200, 300), 15);
-
         this.attacks = new Attacks(this);
 
-        this.scoreText = this.add.text(20, 20, 'Score: 0', { font: '18px Roboto', color: '#ffffff' });
+        this.scoreText = this.add.text(
+            screenWidth / 2,
+            screenHeight / 2,
+            '0',
+            { font: '64px Roboto', color: '#ffffff' }
+        ).setOrigin(0.5, 0.5);
         this.scoreText.setDepth(1);
 
         if (this.input.keyboard) {
@@ -280,24 +285,24 @@ export default class Game extends Phaser.Scene {
         });
         
         this.timeElapsed++;
-        this.scoreText.text = `Score: ${this.getScore()}`;
+        this.scoreText.text = `${this.getScore()}`;
     }
 
     private movePlayer(): void {
         if (this.keyA.isDown && this.player.x > 0) {
-            this.player.x -= this.speed;
+            this.player.x -= this.playerSpeed;
         }
 
         if (this.keyD.isDown && this.player.x < this.screenSize.width - this.player.width) {
-            this.player.x += this.speed;
+            this.player.x += this.playerSpeed;
         }
 
         if (this.keyW.isDown && this.player.y > 0) {
-            this.player.y -= this.speed;
+            this.player.y -= this.playerSpeed;
         }
 
         if (this.keyS.isDown && this.player.y < this.screenSize.height - this.player.height) {
-            this.player.y += this.speed;
+            this.player.y += this.playerSpeed;
         }
     }
 
