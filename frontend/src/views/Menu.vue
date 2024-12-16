@@ -1,13 +1,15 @@
 <template>
-<div id="title">Bullet Dash</div>
-<div id="wrapper">
-    <div
-        v-for="(item, index) in menuItems"
-        :key="index"
-        :class="['menu-item', { active: currentIndex === index}]"
-        @click="selectItem(index)"
-    >
-    {{ item.label }}
+<div>
+    <div id="title">Bullet Dash</div>
+    <div id="menu-wrapper">
+        <div
+            v-for="(item, index) in menuItems"
+            :key="index"
+            :class="['menu-item', { active: currentIndex === index}]"
+            @click="selectItem(index)"
+        >
+        {{ item.label }}
+        </div>
     </div>
 </div>
 </template>
@@ -69,20 +71,26 @@ body {
 }
 
 #title {
+    cursor: default;
+    user-select: none;
     font-family: "PixelGame", sans-serif;
-    font-size: 96px;
+    font-size: 112px;
     color: white;
     text-align: center;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-#wrapper {
+#menu-wrapper {
     width: 220px;
     display: flex;
     flex-direction: column;
     text-align: center;
     row-gap: 3pt;
     position: absolute;
-    top: 50%;
+    top: 60%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
