@@ -63,6 +63,8 @@ table {
     font-family: ArcadeClassic, sans-serif;
     text-align: center;
     border-spacing: 14px;
+    cursor: default;
+    user-select: none;
 }
 
 table thead {

@@ -95,6 +95,7 @@ export default {
     font-family: ArcadeClassic, sans-serif;
     font-size: 32px;
     cursor: pointer;
+    user-select: none;
     padding: 7px;
     color: rgb(89, 89, 89);
 }

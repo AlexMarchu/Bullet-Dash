@@ -40,7 +40,7 @@ export default {
         },
         async login() {
             if (this.username === "") {
-                this.errorMessage = "Enter    nickname!";
+                this.errorMessage = "Enter nickname!";
                 return;
             }
 
