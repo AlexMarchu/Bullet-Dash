@@ -115,13 +115,17 @@ export class Attacks {
             const edge = Phaser.Math.Between(0, 1);
             const centerX = screenSize.width / 2;
             const centerY = screenSize.height / 2;
-
+    
             for (let i = 0; i < 8; i++) {
                 const angle = Phaser.Math.DegToRad((360 / 8) * i);
-                const startX = centerX + Math.cos(angle) * 100;
-                const startY = centerY + Math.sin(angle) * 100;
-
-                this.projectiles.push(new Projectile(this.scene, startX, startY, "fireball", new Phaser.Math.Vector2(centerX, centerY), 10));
+                const radius = 1;
+                const startX = centerX + Math.cos(angle) * radius;
+                const startY = centerY + Math.sin(angle) * radius;
+    
+                const endX = startX + Math.cos(angle) * 200;
+                const endY = startY + Math.sin(angle) * 200;
+    
+                this.projectiles.push(new Projectile(this.scene, startX, startY, "fireball", new Phaser.Math.Vector2(endX, endY), 10));
             }
             this.shootCooldown = this.scene.time.now;
         }
