@@ -25,13 +25,14 @@ export class Attacks {
             this.currentPattern = this.nextPattern;
             this.nextPattern = Phaser.Math.Between(0, 4);
 
-            if (!this.hardMode && Phaser.Math.Between(0, 5) === 0) {
-                this.hardMode = true;
-                this.hardModeTimer = this.scene.time.now;
-                if (player.body instanceof Phaser.Physics.Arcade.Body) {
-                    this.extraAttacks = Math.floor(player.body.speed / 20);
-                }
-            }
+            // if (!this.hardMode && Phaser.Math.Between(0, 5) === 0) {
+            //     this.hardMode = true;
+            //     this.hardModeTimer = this.scene.time.now;
+            //     if (player.body instanceof Phaser.Physics.Arcade.Body) {
+            //         this.extraAttacks = Math.floor(player.body.speed / 20);
+            //     }
+            // }
+            this.hardMode = true;
         }
 
         if (this.hardMode && this.scene.time.now - this.hardModeTimer > hardTime * 1000) {
@@ -158,7 +159,7 @@ export class Attacks {
             ];
 
             const shuffledPoints = Phaser.Utils.Array.Shuffle(allPoints);
-            const spawnPoints = shuffledPoints.slice(0, Math.floor(shuffledPoints.length / 2));
+            const spawnPoints = shuffledPoints.slice(0, Math.floor(shuffledPoints.length / 3));
     
             for (let i = 0; i < spawnPoints.length; ++i) {
                 const { x, y } = spawnPoints[i];
@@ -288,6 +289,9 @@ export default class Game extends Phaser.Scene {
     private scoreText!: Phaser.GameObjects.Text;
     private isPaused: boolean = false;
     private pauseText!: Phaser.GameObjects.Text;
+    private musicTracks: Phaser.Sound.BaseSound[] = [];
+    private currentTrackIndex: number = 0;
+    private currentTrack!: Phaser.Sound.BaseSound;
 
     constructor() {
         super("Game");
@@ -302,6 +306,20 @@ export default class Game extends Phaser.Scene {
         this.load.image('fireball', require('@/assets/fireball.png'));
         this.load.image('arrow', require('@/assets/arrow.png'));
         this.load.image('pink_arrow', require('@/assets/pink_arrow.png'));
+
+        this.load.audio('Albatros', '../src/assets/music/Albatros.mp3');
+        this.load.audio('Blip-Master', '../src/assets/music/Blip-Master.mp3');
+        this.load.audio('Bit-Fight11', '../src/assets/music/Bit-Fight11.mp3');
+        this.load.audio('Dreamz', '../src/assets/music/Dreamz.mp3');
+        this.load.audio('Fair-N-Square', '../src/assets/music/Fair-N-Square.mp3');
+        this.load.audio('Game-On-by-Tricycle', '../src/assets/music/Game-On-by-Tricycle.mp3');
+        this.load.audio('Moving-to-Miami', '../src/assets/music/Moving-to-Miami.mp3');
+        this.load.audio('Press-X-Twice', '../src/assets/music/Press-X-Twice.mp3');
+        this.load.audio('Racing-Hearts', '../src/assets/music/Racing-Hearts.mp3');
+        this.load.audio('Soon', '../src/assets/music/Soon.mp3');
+        this.load.audio('Tiger-Tracks', '../src/assets/music/Tiger-Tracks.mp3');
+        this.load.audio('Time-By-Several-Definitions', '../src/assets/music/Time-By-Several-Definitions.mp3');
+        this.load.audio('Virtual', '../src/assets/music/Virtual.mp3');
     }
 
     create() {
@@ -350,6 +368,26 @@ export default class Game extends Phaser.Scene {
             undefined,
             this
         );
+
+        this.musicTracks = [
+            this.sound.add('Albatros', { loop: false }),
+            this.sound.add('Blip-Master', { loop: false }),
+            this.sound.add('Bit-Fight11', { loop: false }),
+            this.sound.add('Dreamz', { loop: false }),
+            this.sound.add('Fair-N-Square', { loop: false }),
+            this.sound.add('Game-On-by-Tricycle', { loop: false }),
+            this.sound.add('Moving-to-Miami', { loop: false }),
+            this.sound.add('Press-X-Twice', { loop: false }),
+            this.sound.add('Racing-Hearts', { loop: false }),
+            this.sound.add('Soon', { loop: false }),
+            this.sound.add('Tiger-Tracks', { loop: false }),
+            this.sound.add('Time-By-Several-Definitions', { loop: false }),
+            this.sound.add('Virtual', { loop: false })
+        ];
+        
+        Phaser.Utils.Array.Shuffle(this.musicTracks);
+        this.currentTrackIndex = Phaser.Math.Between(0, this.musicTracks.length - 1);
+        this.playNextTrack();
     }
 
     update(time: number, delta: number) {
@@ -413,6 +451,10 @@ export default class Game extends Phaser.Scene {
                 'Game over\nPress space', {
                     font: '48px Arial', color: '#ffffff', align: 'center' }
             ).setOrigin(0.5);
+
+            if (this.currentTrack) {
+                this.currentTrack.stop();
+            }
         }
     }
 
@@ -438,5 +480,27 @@ export default class Game extends Phaser.Scene {
         this.physics.resume();
 
         this.isPaused = false;
+    }
+
+    private playNextTrack() {
+        if (this.currentTrack) {
+            this.currentTrack.stop();
+        }
+
+        this.currentTrackIndex++;
+
+        if (this.currentTrackIndex === this.musicTracks.length) {
+            Phaser.Utils.Array.Shuffle(this.musicTracks);
+            this.currentTrackIndex = 0;
+        }
+
+        this.currentTrack = this.musicTracks[this.currentTrackIndex];
+
+        this.currentTrack.play();
+        console.log("Now playing", this.currentTrack.key);
+
+        this.currentTrack.once("complete", () => {
+            this.playNextTrack();
+        });
     }
 }
