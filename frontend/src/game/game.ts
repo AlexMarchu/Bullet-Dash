@@ -10,7 +10,6 @@ export class Attacks {
     private hardModeTimer: number = 0;
     private extraAttacks: number = 0;
     private offset: number = 0;
-    private rotateDir: number = 0;
     private projectiles: Projectile[] = [];
 
     constructor(scene: Phaser.Scene) {
@@ -119,7 +118,6 @@ export class Attacks {
 
     private edgeAttack(screenSize: { width: number; height: number }) {
         if (this.scene.time.now - this.shootCooldown > 500) {
-            const edge = Phaser.Math.Between(0, 1);
             const centerX = screenSize.width / 2;
             const centerY = screenSize.height / 2;
     
@@ -303,24 +301,24 @@ export default class Game extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('player', require('@/assets/player.png'));
-        this.load.image('fireball', require('@/assets/fireball.png'));
-        this.load.image('arrow', require('@/assets/arrow.png'));
-        this.load.image('pink_arrow', require('@/assets/pink_arrow.png'));
+        this.load.image("player", require("@/assets/player.png"));
+        this.load.image("fireball", require("@/assets/fireball.png"));
+        this.load.image("arrow", require("@/assets/arrow.png"));
+        this.load.image("pink_arrow", require("@/assets/pink_arrow.png"));
 
-        this.load.audio('Albatros', '../src/assets/music/Albatros.mp3');
-        this.load.audio('Blip-Master', '../src/assets/music/Blip-Master.mp3');
-        this.load.audio('Bit-Fight11', '../src/assets/music/Bit-Fight11.mp3');
-        this.load.audio('Dreamz', '../src/assets/music/Dreamz.mp3');
-        this.load.audio('Fair-N-Square', '../src/assets/music/Fair-N-Square.mp3');
-        this.load.audio('Game-On-by-Tricycle', '../src/assets/music/Game-On-by-Tricycle.mp3');
-        this.load.audio('Moving-to-Miami', '../src/assets/music/Moving-to-Miami.mp3');
-        this.load.audio('Press-X-Twice', '../src/assets/music/Press-X-Twice.mp3');
-        this.load.audio('Racing-Hearts', '../src/assets/music/Racing-Hearts.mp3');
-        this.load.audio('Soon', '../src/assets/music/Soon.mp3');
-        this.load.audio('Tiger-Tracks', '../src/assets/music/Tiger-Tracks.mp3');
-        this.load.audio('Time-By-Several-Definitions', '../src/assets/music/Time-By-Several-Definitions.mp3');
-        this.load.audio('Virtual', '../src/assets/music/Virtual.mp3');
+        this.load.audio("Albatros", "../src/assets/music/Albatros.mp3");
+        this.load.audio("Blip-Master", "../src/assets/music/Blip-Master.mp3");
+        this.load.audio("Bit-Fight11", "../src/assets/music/Bit-Fight11.mp3");
+        this.load.audio("Dreamz", "../src/assets/music/Dreamz.mp3");
+        this.load.audio("Fair-N-Square", "../src/assets/music/Fair-N-Square.mp3");
+        this.load.audio("Game-On-by-Tricycle", "../src/assets/music/Game-On-by-Tricycle.mp3");
+        this.load.audio("Moving-to-Miami", "../src/assets/music/Moving-to-Miami.mp3");
+        this.load.audio("Press-X-Twice", "../src/assets/music/Press-X-Twice.mp3");
+        this.load.audio("Racing-Hearts", "../src/assets/music/Racing-Hearts.mp3");
+        this.load.audio("Soon", "../src/assets/music/Soon.mp3");
+        this.load.audio("Tiger-Tracks", "../src/assets/music/Tiger-Tracks.mp3");
+        this.load.audio("Time-By-Several-Definitions", "../src/assets/music/Time-By-Several-Definitions.mp3");
+        this.load.audio("Virtual", "../src/assets/music/Virtual.mp3");
     }
 
     create() {
@@ -338,12 +336,10 @@ export default class Game extends Phaser.Scene {
         this.scoreText = this.add.text(
             screenWidth / 2,
             screenHeight / 2,
-            '',
-            { font: '96px Pixeboy', color: '#ffffff' }
+            "",
+            { font: "96px Pixeboy", color: "#ffffff" }
         ).setOrigin(0.5, 0.6);
         this.scoreText.setDepth(1);
-
-        
 
         if (this.input.keyboard) {
             this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
@@ -360,7 +356,7 @@ export default class Game extends Phaser.Scene {
             this.player,
             this.projectiles,
             (player, projectile) => {
-                console.log("сollider triggered");
+                console.log("Collider triggered");
                 this.handleCollision(
                     player as Phaser.Types.Physics.Arcade.GameObjectWithBody,
                     projectile as Phaser.Types.Physics.Arcade.GameObjectWithBody
@@ -371,19 +367,19 @@ export default class Game extends Phaser.Scene {
         );
 
         this.musicTracks = [
-            this.sound.add('Albatros', { loop: false, volume: this.defaultMusicVolume }),
-            this.sound.add('Blip-Master', { loop: false, volume: this.defaultMusicVolume}),
-            this.sound.add('Bit-Fight11', { loop: false, volume: this.defaultMusicVolume}),
-            this.sound.add('Dreamz', { loop: false, volume: this.defaultMusicVolume}),
-            this.sound.add('Fair-N-Square', { loop: false, volume: this.defaultMusicVolume}),
-            this.sound.add('Game-On-by-Tricycle', { loop: false, volume: this.defaultMusicVolume}),
-            this.sound.add('Moving-to-Miami', { loop: false, volume: this.defaultMusicVolume}),
-            this.sound.add('Press-X-Twice', { loop: false, volume: this.defaultMusicVolume}),
-            this.sound.add('Racing-Hearts', { loop: false, volume: this.defaultMusicVolume}),
-            this.sound.add('Soon', { loop: false, volume: this.defaultMusicVolume}),
-            this.sound.add('Tiger-Tracks', { loop: false, volume: this.defaultMusicVolume}),
-            this.sound.add('Time-By-Several-Definitions', { loop: false, volume: this.defaultMusicVolume}),
-            this.sound.add('Virtual', { loop: false, volume: this.defaultMusicVolume})
+            this.sound.add("Albatros", { loop: false, volume: this.defaultMusicVolume }),
+            this.sound.add("Blip-Master", { loop: false, volume: this.defaultMusicVolume }),
+            this.sound.add("Bit-Fight11", { loop: false, volume: this.defaultMusicVolume }),
+            this.sound.add("Dreamz", { loop: false, volume: this.defaultMusicVolume }),
+            this.sound.add("Fair-N-Square", { loop: false, volume: this.defaultMusicVolume }),
+            this.sound.add("Game-On-by-Tricycle", { loop: false, volume: this.defaultMusicVolume }),
+            this.sound.add("Moving-to-Miami", { loop: false, volume: this.defaultMusicVolume }),
+            this.sound.add("Press-X-Twice", { loop: false, volume: this.defaultMusicVolume }),
+            this.sound.add("Racing-Hearts", { loop: false, volume: this.defaultMusicVolume }),
+            this.sound.add("Soon", { loop: false, volume: this.defaultMusicVolume }),
+            this.sound.add("Tiger-Tracks", { loop: false, volume: this.defaultMusicVolume} ),
+            this.sound.add("Time-By-Several-Definitions", { loop: false, volume: this.defaultMusicVolume }),
+            this.sound.add("Virtual", { loop: false, volume: this.defaultMusicVolume })
         ];
         
         Phaser.Utils.Array.Shuffle(this.musicTracks);
@@ -398,6 +394,7 @@ export default class Game extends Phaser.Scene {
             }
             return;
         }
+
         this.movePlayer();
 
         this.attacks.update(this.player, this.screenSize);
@@ -438,7 +435,8 @@ export default class Game extends Phaser.Scene {
     private handleCollision(player: Phaser.Types.Physics.Arcade.GameObjectWithBody, projectile: Phaser.Types.Physics.Arcade.GameObjectWithBody) {
         console.log(this.player.body);
         console.log(projectile.body);
-        console.log('Collision triggered', player, projectile);
+        console.log("Collision triggered", player, projectile);
+
         if (projectile instanceof Phaser.Physics.Arcade.Image) {
             projectile.destroy();
 
@@ -449,21 +447,14 @@ export default class Game extends Phaser.Scene {
             this.pauseText = this.add.text(
                 this.screenSize.width / 2,
                 this.screenSize.height / 2,
-                'Game over\nPress space', {
-                    font: '48px Arial', color: '#ffffff', align: 'center' }
+                "Game over\nPress space", {
+                    font: "48px Arial", color: "#ffffff", align: "center" }
             ).setOrigin(0.5);
 
             if (this.currentTrack) {
                 this.currentTrack.stop();
             }
         }
-    }
-
-    private addProjectile(x: number, y: number, type: string, target: Phaser.Math.Vector2, speed: number) {
-        const projectile = new Projectile(this, x, y, type, target, speed);
-        this.projectiles.add(projectile.img);
-        this.physics.world.enable(projectile.img);
-        console.log(projectile.img.body);
     }
 
     private restartGame(): void {
