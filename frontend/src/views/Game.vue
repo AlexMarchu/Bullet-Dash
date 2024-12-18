@@ -1,12 +1,16 @@
 <template>
-    <div id="game-container"></div>
+<div id="game-container"></div>
 </template>
 
 <script>
 import Phaser from "phaser";
-import Game from "../game/game.ts";
+import Game from "@/game/game.ts";
+import authService from "@/services/auth.ts";
 
 export default {
+    data() {
+        game: Phaser.Game;
+    },
     mounted() {
         window.addEventListener('keyup', this.handleKeyEsc);
         this.startGame();
@@ -17,15 +21,17 @@ export default {
     methods: {
         handleKeyEsc(event) {
             if (event.key === 'Escape') {
+                authService.updateUserScore(this.game.scene.getScene('Game').getScore());
+                this.game.destroy();
                 this.$router.push("/menu");
             }
         },
         startGame() {
             const config = {
                 type: Phaser.AUTO,
+                parent: "game-container",
                 width: 800,
                 height: 600,
-                parent: "game-container",
                 scene: Game,
                 physics: {
                     default: "arcade",
@@ -34,14 +40,24 @@ export default {
                         debug: false,
                     },
                 },
+                scale: {
+                    mode: Phaser.Scale.RESIZE,
+                    autoCenter: Phaser.Scale.NO_CENTER,
+                }
             };
 
-            new Phaser.Game(config);
+            this.game = new Phaser.Game(config);
         },
     },
 };
 </script>
 
-<style>
-
+<style scoped>
+#game-container {
+    width: 100%; 
+    height: 100%; 
+    position: fixed;
+    top: 0; 
+    left: 0;
+}
 </style>

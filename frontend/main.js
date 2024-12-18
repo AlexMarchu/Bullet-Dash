@@ -4,9 +4,8 @@ const url = require("url");
 
 const createWindow = () => {
     const window = new BrowserWindow({
-        width: 800,
-        height: 600,
         // autoHideMenuBar: true,
+        fullscreen: true,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -20,6 +19,8 @@ const createWindow = () => {
             slashes: true,
         })
     );
+
+    // window.setFullScreen(true);
 };
 
 app.on("ready", () => {
