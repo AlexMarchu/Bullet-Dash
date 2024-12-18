@@ -213,7 +213,7 @@ class Projectile {
     x: number;
     y: number;
     obsType: string;
-    img: Phaser.GameObjects.Image;
+    img: Phaser.Physics.Arcade.Image;
     speed: number;
     startVector: Phaser.Math.Vector2;
     endVector: Phaser.Math.Vector2;
@@ -238,7 +238,7 @@ class Projectile {
         this.size = size;
         this.offscreenDisable = offscreenDisable;
 
-        this.img = scene.add.image(x, y, obsType).setScale(size);
+        this.img = scene.physics.add.image(x, y, obsType).setScale(size);
         this.startVector = new Phaser.Math.Vector2(x, y);
         this.endVector = endLoc;
 
@@ -297,7 +297,8 @@ export default class Game extends Phaser.Scene {
     private attacks!: Attacks;
     private timeElapsed: number = 0;
     private scoreText!: Phaser.GameObjects.Text;
-    public projectiles!: Phaser.Physics.Arcade.Group;
+    private isPaused: boolean = false;
+    private pauseText!: Phaser.GameObjects.Text;
 
     constructor() {
         super("Game");
@@ -346,15 +347,27 @@ export default class Game extends Phaser.Scene {
         }
 
         this.physics.add.collider(
-            this.player as Phaser.Types.Physics.Arcade.GameObjectWithBody,
-            this.projectiles as Phaser.Physics.Arcade.Group,
-            (player, projectile) => this.handleCollision(player as Phaser.Types.Physics.Arcade.GameObjectWithBody, projectile as Phaser.GameObjects.Image),
+            this.player,
+            this.projectiles,
+            (player, projectile) => {
+                console.log("сollider triggered");
+                this.handleCollision(
+                    player as Phaser.Types.Physics.Arcade.GameObjectWithBody,
+                    projectile as Phaser.Types.Physics.Arcade.GameObjectWithBody
+                );
+            },
             undefined,
             this
         );
     }
 
     update(time: number, delta: number) {
+        if (this.isPaused) {
+            if (this.input.keyboard!.checkDown(this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE), 250)) {
+                this.restartGame();
+            }
+            return;
+        }
         this.movePlayer();
 
         this.attacks.update(this.player, this.screenSize);
@@ -381,8 +394,47 @@ export default class Game extends Phaser.Scene {
         }
     }
 
-    private handleCollision(player: Phaser.Types.Physics.Arcade.GameObjectWithBody, projectile: Phaser.GameObjects.Image) {
-        projectile.destroy();
-        this.game.events.emit('lose');
+    private handleCollision(player: Phaser.Types.Physics.Arcade.GameObjectWithBody, projectile: Phaser.Types.Physics.Arcade.GameObjectWithBody) {
+        console.log(this.player.body);
+        console.log(projectile.body);
+        console.log('сollision triggered', player, projectile);
+        if (projectile instanceof Phaser.Physics.Arcade.Image) {
+            projectile.destroy();
+
+            console.log("Collision detected!");
+            this.physics.pause();
+            this.isPaused = true;
+
+            this.pauseText = this.add.text(
+                this.screenSize.width / 2,
+                this.screenSize.height / 2,
+                'Game over\nPress space', {
+                    font: '48px Arial', color: '#ffffff', align: 'center' }
+            ).setOrigin(0.5);
+        }
+    }
+
+    private addProjectile(x: number, y: number, type: string, target: Phaser.Math.Vector2, speed: number) {
+        const projectile = new Projectile(this, x, y, type, target, speed);
+        this.projectiles.add(projectile.img);
+        this.physics.world.enable(projectile.img);
+        console.log(projectile.img.body);
+    }
+
+    private restartGame(): void {
+        // Удалить текст паузы
+        if (this.pauseText) {
+            this.pauseText.destroy();
+        }
+
+        this.timeElapsed = 0;
+
+        this.projectiles.clear(true, true);
+
+        this.player.setPosition(this.screenSize.width / 2, this.screenSize.height / 2);
+
+        this.physics.resume();
+
+        this.isPaused = false;
     }
 }
