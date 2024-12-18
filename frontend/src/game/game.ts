@@ -70,7 +70,7 @@ export class Attacks {
 
     private radialAttack(screenSize: { width: number; height: number }) {
         if (this.scene.time.now - this.shootCooldown > 250) {
-            for (let i = 0; i < 12 + this.extraAttacks; i++) {
+            for (let i = 0; i < 16 + this.extraAttacks; i++) {
                 const angle = Phaser.Math.DegToRad((360 / (12 + this.extraAttacks)) * i + this.offset);
                 const x = screenSize.width / 2;
                 const y = screenSize.height / 2;
@@ -87,7 +87,7 @@ export class Attacks {
     private arrowAttack(screenSize: { width: number; height: number }) {
         if (this.scene.time.now - this.shootCooldown > 500) {
             const direction = Phaser.Math.Between(0, 3);
-            for (let i = 0; i < Phaser.Math.Between(2, 5 + this.extraAttacks); i++) {
+            for (let i = 0; i < Phaser.Math.Between(2, 8 + this.extraAttacks); i++) {
                 let x = 0, y = 0, endX = 0, endY = 0;
                 if (direction === 0) {
                     x = Phaser.Math.Between(0, screenSize.width);
@@ -123,7 +123,7 @@ export class Attacks {
             const centerX = screenSize.width / 2;
             const centerY = screenSize.height / 2;
     
-            for (let i = 0; i < 8; i++) {
+            for (let i = 0; i < 12; i++) {
                 const angle = Phaser.Math.DegToRad((360 / 8) * i);
                 const radius = 1;
                 const startX = centerX + Math.cos(angle) * radius;
@@ -185,7 +185,7 @@ export class Attacks {
 
             for (let i = 0; i < 5; ++i) {
                 const angle =  Phaser.Math.DegToRad(Phaser.Math.Between(0, 360));
-                const offset = 100 * Math.sin(i * (2 * Math.PI / 5));
+                const offset = 135 * Math.sin(i * (2 * Math.PI / 5));
                 const x = startPoint.x + offset * Math.cos(angle);
                 const y = startPoint.y / 2 + offset * Math.sin(angle);
                 const target = new Phaser.Math.Vector2(player.x, player.y);
@@ -292,6 +292,7 @@ export default class Game extends Phaser.Scene {
     private musicTracks: Phaser.Sound.BaseSound[] = [];
     private currentTrackIndex: number = 0;
     private currentTrack!: Phaser.Sound.BaseSound;
+    private defaultMusicVolume: number = 0.1;
 
     constructor() {
         super("Game");
@@ -370,19 +371,19 @@ export default class Game extends Phaser.Scene {
         );
 
         this.musicTracks = [
-            this.sound.add('Albatros', { loop: false }),
-            this.sound.add('Blip-Master', { loop: false }),
-            this.sound.add('Bit-Fight11', { loop: false }),
-            this.sound.add('Dreamz', { loop: false }),
-            this.sound.add('Fair-N-Square', { loop: false }),
-            this.sound.add('Game-On-by-Tricycle', { loop: false }),
-            this.sound.add('Moving-to-Miami', { loop: false }),
-            this.sound.add('Press-X-Twice', { loop: false }),
-            this.sound.add('Racing-Hearts', { loop: false }),
-            this.sound.add('Soon', { loop: false }),
-            this.sound.add('Tiger-Tracks', { loop: false }),
-            this.sound.add('Time-By-Several-Definitions', { loop: false }),
-            this.sound.add('Virtual', { loop: false })
+            this.sound.add('Albatros', { loop: false, volume: this.defaultMusicVolume }),
+            this.sound.add('Blip-Master', { loop: false, volume: this.defaultMusicVolume}),
+            this.sound.add('Bit-Fight11', { loop: false, volume: this.defaultMusicVolume}),
+            this.sound.add('Dreamz', { loop: false, volume: this.defaultMusicVolume}),
+            this.sound.add('Fair-N-Square', { loop: false, volume: this.defaultMusicVolume}),
+            this.sound.add('Game-On-by-Tricycle', { loop: false, volume: this.defaultMusicVolume}),
+            this.sound.add('Moving-to-Miami', { loop: false, volume: this.defaultMusicVolume}),
+            this.sound.add('Press-X-Twice', { loop: false, volume: this.defaultMusicVolume}),
+            this.sound.add('Racing-Hearts', { loop: false, volume: this.defaultMusicVolume}),
+            this.sound.add('Soon', { loop: false, volume: this.defaultMusicVolume}),
+            this.sound.add('Tiger-Tracks', { loop: false, volume: this.defaultMusicVolume}),
+            this.sound.add('Time-By-Several-Definitions', { loop: false, volume: this.defaultMusicVolume}),
+            this.sound.add('Virtual', { loop: false, volume: this.defaultMusicVolume})
         ];
         
         Phaser.Utils.Array.Shuffle(this.musicTracks);
@@ -437,7 +438,7 @@ export default class Game extends Phaser.Scene {
     private handleCollision(player: Phaser.Types.Physics.Arcade.GameObjectWithBody, projectile: Phaser.Types.Physics.Arcade.GameObjectWithBody) {
         console.log(this.player.body);
         console.log(projectile.body);
-        console.log('сollision triggered', player, projectile);
+        console.log('Collision triggered', player, projectile);
         if (projectile instanceof Phaser.Physics.Arcade.Image) {
             projectile.destroy();
 
