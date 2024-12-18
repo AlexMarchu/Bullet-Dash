@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 
-class Attacks {
-    private scene: Game;
+export class Attacks {
+    private scene: Phaser.Scene;
     private attackTimer: number = 0;
     private shootCooldown: number = 0;
     private currentPattern: number = 0;
@@ -13,7 +13,7 @@ class Attacks {
     private rotateDir: number = 0;
     private projectiles: Projectile[] = [];
 
-    constructor(scene: Game) {
+    constructor(scene: Phaser.Scene) {
         this.scene = scene;
     }
 
@@ -76,9 +76,7 @@ class Attacks {
                 const endX = x + Math.cos(angle) * 100;
                 const endY = y + Math.sin(angle) * 100;
 
-                const proj = new Projectile(this.scene, x, y, "fireball", new Phaser.Math.Vector2(endX, endY), 10);
-                this.projectiles.push(proj);
-                this.scene.projectiles.add(proj.img);
+                this.projectiles.push(new Projectile(this.scene, x, y, "fireball", new Phaser.Math.Vector2(endX, endY), 10));
             }
             this.offset += 10;
             this.shootCooldown = this.scene.time.now;
@@ -112,9 +110,7 @@ class Attacks {
                     endY = y;
                 }
 
-                const proj = new Projectile(this.scene, x, y, "arrow", new Phaser.Math.Vector2(endX, endY), 15);
-                this.projectiles.push(proj);
-                this.scene.projectiles.add(proj.img);
+                this.projectiles.push(new Projectile(this.scene, x, y, "arrow", new Phaser.Math.Vector2(endX, endY), 15));
             }
             this.shootCooldown = this.scene.time.now;
         }
@@ -135,10 +131,7 @@ class Attacks {
                 const endX = startX + Math.cos(angle) * 200;
                 const endY = startY + Math.sin(angle) * 200;
     
-                const proj = new Projectile(this.scene, startX, startY, "fireball", new Phaser.Math.Vector2(endX, endY), 10);
-                this.projectiles.push(proj);
-                this.scene.projectiles.add(proj.img);
-                
+                this.projectiles.push(new Projectile(this.scene, startX, startY, "fireball", new Phaser.Math.Vector2(endX, endY), 10));
             }
             this.shootCooldown = this.scene.time.now;
         }
@@ -170,10 +163,7 @@ class Attacks {
             for (let i = 0; i < spawnPoints.length; ++i) {
                 const { x, y } = spawnPoints[i];
                 const target = new Phaser.Math.Vector2(player.x, player.y);
-                
-                const proj = new Projectile(this.scene, x, y, "pink_arrow", target, 15)
-                this.projectiles.push(proj);
-                this.scene.projectiles.add(proj.img);
+                this.projectiles.push(new Projectile(this.scene, x, y, "pink_arrow", target, 15));
             }
     
             this.shootCooldown = this.scene.time.now;
@@ -198,10 +188,8 @@ class Attacks {
                 const x = startPoint.x + offset * Math.cos(angle);
                 const y = startPoint.y / 2 + offset * Math.sin(angle);
                 const target = new Phaser.Math.Vector2(player.x, player.y);
-                
-                const proj = new Projectile(this.scene, x, y, "fireball", target, 10);
-                this.projectiles.push(proj);
-                this.scene.projectiles.add(proj.img);
+
+                this.projectiles.push(new Projectile(this.scene, x, y, "fireball", target, 10));
             }
 
             this.shootCooldown = this.scene.time.now;
@@ -292,6 +280,7 @@ export default class Game extends Phaser.Scene {
     private keyLeft!: Phaser.Input.Keyboard.Key;
     private keyDown!: Phaser.Input.Keyboard.Key;
     private keyRight!: Phaser.Input.Keyboard.Key;
+    private projectiles!: Phaser.Physics.Arcade.Group;
     private screenSize!: { width: number; height: number };
     private playerSpeed: number = 4;
     private attacks!: Attacks;
@@ -335,6 +324,8 @@ export default class Game extends Phaser.Scene {
         ).setOrigin(0.5, 0.6);
         this.scoreText.setDepth(1);
 
+        
+
         if (this.input.keyboard) {
             this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
             this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
@@ -371,6 +362,17 @@ export default class Game extends Phaser.Scene {
         this.movePlayer();
 
         this.attacks.update(this.player, this.screenSize);
+
+        this.projectiles.getChildren().forEach((projectile: Phaser.GameObjects.GameObject) => {
+            if (projectile instanceof Phaser.Physics.Arcade.Image) {
+                const proj = projectile as any;
+                proj.move();
+
+                if (proj.offScreen(this.screenSize)) {
+                    this.projectiles.remove(projectile, true, true);
+                }
+            }
+        });
         
         this.timeElapsed++;
         this.scoreText.text = `${this.getScore()}`;
