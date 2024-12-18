@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 
-export class Attacks {
-    private scene: Phaser.Scene;
+class Attacks {
+    private scene: Game;
     private attackTimer: number = 0;
     private shootCooldown: number = 0;
     private currentPattern: number = 0;
@@ -13,7 +13,7 @@ export class Attacks {
     private rotateDir: number = 0;
     private projectiles: Projectile[] = [];
 
-    constructor(scene: Phaser.Scene) {
+    constructor(scene: Game) {
         this.scene = scene;
     }
 
@@ -76,7 +76,9 @@ export class Attacks {
                 const endX = x + Math.cos(angle) * 100;
                 const endY = y + Math.sin(angle) * 100;
 
-                this.projectiles.push(new Projectile(this.scene, x, y, "fireball", new Phaser.Math.Vector2(endX, endY), 10));
+                const proj = new Projectile(this.scene, x, y, "fireball", new Phaser.Math.Vector2(endX, endY), 10);
+                this.projectiles.push(proj);
+                this.scene.projectiles.add(proj.img);
             }
             this.offset += 10;
             this.shootCooldown = this.scene.time.now;
@@ -110,7 +112,9 @@ export class Attacks {
                     endY = y;
                 }
 
-                this.projectiles.push(new Projectile(this.scene, x, y, "arrow", new Phaser.Math.Vector2(endX, endY), 15));
+                const proj = new Projectile(this.scene, x, y, "arrow", new Phaser.Math.Vector2(endX, endY), 15);
+                this.projectiles.push(proj);
+                this.scene.projectiles.add(proj.img);
             }
             this.shootCooldown = this.scene.time.now;
         }
@@ -131,7 +135,10 @@ export class Attacks {
                 const endX = startX + Math.cos(angle) * 200;
                 const endY = startY + Math.sin(angle) * 200;
     
-                this.projectiles.push(new Projectile(this.scene, startX, startY, "fireball", new Phaser.Math.Vector2(endX, endY), 10));
+                const proj = new Projectile(this.scene, startX, startY, "fireball", new Phaser.Math.Vector2(endX, endY), 10);
+                this.projectiles.push(proj);
+                this.scene.projectiles.add(proj.img);
+                
             }
             this.shootCooldown = this.scene.time.now;
         }
@@ -163,7 +170,10 @@ export class Attacks {
             for (let i = 0; i < spawnPoints.length; ++i) {
                 const { x, y } = spawnPoints[i];
                 const target = new Phaser.Math.Vector2(player.x, player.y);
-                this.projectiles.push(new Projectile(this.scene, x, y, "pink_arrow", target, 15));
+                
+                const proj = new Projectile(this.scene, x, y, "pink_arrow", target, 15)
+                this.projectiles.push(proj);
+                this.scene.projectiles.add(proj.img);
             }
     
             this.shootCooldown = this.scene.time.now;
@@ -188,8 +198,10 @@ export class Attacks {
                 const x = startPoint.x + offset * Math.cos(angle);
                 const y = startPoint.y / 2 + offset * Math.sin(angle);
                 const target = new Phaser.Math.Vector2(player.x, player.y);
-
-                this.projectiles.push(new Projectile(this.scene, x, y, "fireball", target, 10));
+                
+                const proj = new Projectile(this.scene, x, y, "fireball", target, 10);
+                this.projectiles.push(proj);
+                this.scene.projectiles.add(proj.img);
             }
 
             this.shootCooldown = this.scene.time.now;
@@ -280,12 +292,12 @@ export default class Game extends Phaser.Scene {
     private keyLeft!: Phaser.Input.Keyboard.Key;
     private keyDown!: Phaser.Input.Keyboard.Key;
     private keyRight!: Phaser.Input.Keyboard.Key;
-    private projectiles!: Phaser.Physics.Arcade.Group;
     private screenSize!: { width: number; height: number };
     private playerSpeed: number = 4;
     private attacks!: Attacks;
     private timeElapsed: number = 0;
     private scoreText!: Phaser.GameObjects.Text;
+    public projectiles!: Phaser.Physics.Arcade.Group;
 
     constructor() {
         super("Game");
@@ -322,8 +334,6 @@ export default class Game extends Phaser.Scene {
         ).setOrigin(0.5, 0.6);
         this.scoreText.setDepth(1);
 
-        
-
         if (this.input.keyboard) {
             this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
             this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
@@ -338,7 +348,7 @@ export default class Game extends Phaser.Scene {
         this.physics.add.collider(
             this.player as Phaser.Types.Physics.Arcade.GameObjectWithBody,
             this.projectiles as Phaser.Physics.Arcade.Group,
-            (player, projectile) => this.handleCollision(player as Phaser.Types.Physics.Arcade.GameObjectWithBody, projectile as Phaser.Types.Physics.Arcade.GameObjectWithBody),
+            (player, projectile) => this.handleCollision(player as Phaser.Types.Physics.Arcade.GameObjectWithBody, projectile as Phaser.GameObjects.Image),
             undefined,
             this
         );
@@ -348,17 +358,6 @@ export default class Game extends Phaser.Scene {
         this.movePlayer();
 
         this.attacks.update(this.player, this.screenSize);
-
-        this.projectiles.getChildren().forEach((projectile: Phaser.GameObjects.GameObject) => {
-            if (projectile instanceof Phaser.Physics.Arcade.Image) {
-                const proj = projectile as any;
-                proj.move();
-
-                if (proj.offScreen(this.screenSize)) {
-                    this.projectiles.remove(projectile, true, true);
-                }
-            }
-        });
         
         this.timeElapsed++;
         this.scoreText.text = `${this.getScore()}`;
@@ -382,16 +381,8 @@ export default class Game extends Phaser.Scene {
         }
     }
 
-    private handleCollision(player: Phaser.Types.Physics.Arcade.GameObjectWithBody, projectile: Phaser.Types.Physics.Arcade.GameObjectWithBody) {
-        if (projectile instanceof Phaser.Physics.Arcade.Image) {
-            projectile.destroy();
-
-            console.log("Collision detected!");
-        }
-    }
-
-    private addProjectile(x: number, y: number, type: string, target: Phaser.Math.Vector2, speed: number) {
-        const projectile = new Projectile(this, x, y, type, target, speed);
-        this.projectiles.add(projectile.img);
+    private handleCollision(player: Phaser.Types.Physics.Arcade.GameObjectWithBody, projectile: Phaser.GameObjects.Image) {
+        projectile.destroy();
+        this.game.events.emit('lose');
     }
 }

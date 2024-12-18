@@ -14,6 +14,7 @@ export default {
     mounted() {
         window.addEventListener('keyup', this.handleKeyEsc);
         this.startGame();
+        this.game.events.on('lose', this.onLose);
     },
     beforeUnmount() {
         window.removeEventListener('keyup', this.handleKeyEsc);
@@ -21,9 +22,7 @@ export default {
     methods: {
         handleKeyEsc(event) {
             if (event.key === 'Escape') {
-                authService.updateUserScore(this.game.scene.getScene('Game').getScore());
-                this.game.destroy();
-                this.$router.push("/menu");
+                this.onLose();
             }
         },
         startGame() {
@@ -47,7 +46,14 @@ export default {
             };
 
             this.game = new Phaser.Game(config);
+            this.game.scene.start('Game');
         },
+        onLose() {
+            const score = this.game.scene.getScene('Game').getScore();
+            authService.updateUserScore(score);
+            this.game.destroy();
+            this.$router.push("/lose");
+        }
     },
 };
 </script>
