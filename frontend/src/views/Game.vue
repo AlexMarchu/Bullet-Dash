@@ -1,5 +1,6 @@
 <template>
 <div id="game-container"></div>
+<div style="font-family:Pixeboy; position:absolute; visibility:hidden;">.</div>
 </template>
 
 <script>
@@ -12,16 +13,16 @@ export default {
         game: Phaser.Game;
     },
     mounted() {
-        window.addEventListener('keyup', this.handleKeyEsc);
+        window.addEventListener("keydown", this.handleKeyEsc);
         this.startGame();
-        this.game.events.on('lose', this.onLose);
+        this.game.events.on("lose", this.onLose);
     },
     beforeUnmount() {
-        window.removeEventListener('keyup', this.handleKeyEsc);
+        window.removeEventListener("keydown", this.handleKeyEsc);
     },
     methods: {
         handleKeyEsc(event) {
-            if (event.key === 'Escape') {
+            if (event.key === "Escape") {
                 this.onLose();
             }
         },
@@ -46,10 +47,10 @@ export default {
             };
 
             this.game = new Phaser.Game(config);
-            this.game.scene.start('Game');
+            this.game.scene.start("Game");
         },
         onLose() {
-            const score = this.game.scene.getScene('Game').getScore();
+            const score = this.game.scene.getScene("Game").getScore();
             authService.updateUserScore(score);
             window.recentScore = score;
             this.game.destroy();
