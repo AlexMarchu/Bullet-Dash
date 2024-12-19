@@ -288,6 +288,7 @@ export default class Game extends Phaser.Scene {
         this.load.audio("Tiger-Tracks", "../src/assets/music/Tiger-Tracks.mp3");
         this.load.audio("Time-By-Several-Definitions", "../src/assets/music/Time-By-Several-Definitions.mp3");
         this.load.audio("Virtual", "../src/assets/music/Virtual.mp3");
+        this.load.audio("Damage", "../src/assets/sounds/damage.wav");
     }
 
     create() {
@@ -423,6 +424,7 @@ export default class Game extends Phaser.Scene {
             return;
         }
         if (projectile instanceof Projectile) {
+            this.sound.play("Damage", { volume: this.defaultMusicVolume });
             projectile.destroy();
             this.setInvincible(this.invincibleDuration);
             this.playerHealth = Math.max(this.playerHealth - 1, 0);
