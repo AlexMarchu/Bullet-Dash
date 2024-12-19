@@ -33,6 +33,9 @@ export default {
                 width: 800,
                 height: 600,
                 scene: Game,
+                fps: {
+                    target: 60
+                },
                 physics: {
                     default: "arcade",
                     arcade: {

@@ -52,7 +52,6 @@ export class Attacks {
 
     private radialAttack(screenSize: { width: number; height: number }) {
         if (this.scene.time.now - this.shootCooldown > 250) {
-            console.log("CREATING");
             this.shootCooldown = this.scene.time.now;
 
             for (let i = 0; i < 16 + this.extraAttacks; i++) {
@@ -246,6 +245,12 @@ export default class Game extends Phaser.Scene {
     public projectiles!: Phaser.Physics.Arcade.Group;
     private screenSize!: { width: number; height: number };
     private playerSpeed: number = 4;
+    private playerHealth: number = 3;
+    private isInvincible: boolean = false;
+    private invincibleTimer: number = 0;
+    private invincibleDuration: number = 3000;
+    private initInvincibleDuration: number = 5000;
+    private healthText!: Phaser.GameObjects.Text;
     private attacks!: Attacks;
     private timeElapsed: number = 0;
     private scoreText!: Phaser.GameObjects.Text;
@@ -269,6 +274,7 @@ export default class Game extends Phaser.Scene {
         this.load.image("fireball", require("@/assets/fireball.png"));
         this.load.image("arrow", require("@/assets/arrow.png"));
         this.load.image("pink_arrow", require("@/assets/pink_arrow.png"));
+        this.load.image("heart", require("@/assets/heart.png"));
 
         this.load.audio("Albatros", "../src/assets/music/Albatros.mp3");
         this.load.audio("Blip-Master", "../src/assets/music/Blip-Master.mp3");
@@ -304,6 +310,13 @@ export default class Game extends Phaser.Scene {
             { font: "96px Pixeboy", color: "#ffffff" }
         ).setOrigin(0.5, 0.6);
         this.scoreText.setDepth(1);
+
+        this.healthText = this.add.text(
+            10,
+            10,
+            `HP: ${this.playerHealth}`,
+            { font: "32px Pixeboy", color: "#ffffff" }
+        ).setOrigin(0, 0);
 
         if (this.input.keyboard) {
             this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
@@ -349,6 +362,8 @@ export default class Game extends Phaser.Scene {
         Phaser.Utils.Array.Shuffle(this.musicTracks);
         this.currentTrackIndex = Phaser.Math.Between(0, this.musicTracks.length - 1);
         this.playNextTrack();
+
+        this.setInvincible(this.initInvincibleDuration);
     }
 
     update(time: number, delta: number) {
@@ -371,51 +386,58 @@ export default class Game extends Phaser.Scene {
             }
         });
 
+        if (this.isInvincible) {
+            this.invincibleTimer -= delta;
+            if (this.invincibleTimer <= 0) {
+                this.isInvincible = false;
+                this.player.setAlpha(1);
+            } else {
+                this.player.setAlpha(Math.abs(Math.sin(this.invincibleTimer * 0.005)));
+            }
+        }
+
         this.timeElapsed++;
+        this.healthText.text = `HP: ${this.playerHealth}`
         this.scoreText.text = `${this.getScore()}`;
     }
 
     private movePlayer(): void {
-        if (this.keyA.isDown || this.keyLeft.isDown && this.player.x > 0) {
+        if ((this.keyA.isDown || this.keyLeft.isDown) && this.player.x - this.player.width / 2 > 0) {
             this.player.x -= this.playerSpeed;
         }
 
-        if (this.keyD.isDown || this.keyRight.isDown && this.player.x < this.screenSize.width - this.player.width) {
+        if ((this.keyD.isDown || this.keyRight.isDown) && this.player.x + this.player.width / 2 < this.screenSize.width) {
             this.player.x += this.playerSpeed;
         }
 
-        if (this.keyW.isDown || this.keyUp.isDown && this.player.y > 0) {
+        if ((this.keyW.isDown || this.keyUp.isDown) && this.player.y - this.player.height / 2 > 0) {
             this.player.y -= this.playerSpeed;
         }
 
-        if (this.keyS.isDown || this.keyDown.isDown && this.player.y < this.screenSize.height - this.player.height) {
+        if ((this.keyS.isDown || this.keyDown.isDown) && this.player.y < this.screenSize.height - this.player.height) {
             this.player.y += this.playerSpeed;
         }
     }
 
     private handleCollision(player: Phaser.Types.Physics.Arcade.GameObjectWithBody, projectile: Phaser.Types.Physics.Arcade.GameObjectWithBody) {
-        // console.log(this.player.body);
-        // console.log(projectile.body);
-        // console.log("Collision triggered", player, projectile);
+        if (this.isInvincible) {
+            return;
+        }
+        if (projectile instanceof Projectile) {
+            projectile.destroy();
+            this.setInvincible(this.invincibleDuration);
+            this.playerHealth = Math.max(this.playerHealth - 1, 0);
 
-        // if (projectile instanceof Phaser.Physics.Arcade.Image) {
-        //     projectile.destroy();
+            if (this.playerHealth === 0) {
+                this.physics.pause();
+                this.game.events.emit("lose");
+            }
+        }
+    }
 
-        //     console.log("Collision detected!");
-        //     this.physics.pause();
-        //     this.isPaused = true;
-
-        //     this.pauseText = this.add.text(
-        //         this.screenSize.width / 2,
-        //         this.screenSize.height / 2,
-        //         "Game over\nPress space", {
-        //             font: "48px Arial", color: "#ffffff", align: "center" }
-        //     ).setOrigin(0.5);
-
-        //     if (this.currentTrack) {
-        //         this.currentTrack.stop();
-        //     }
-        // }
+    private setInvincible(duration: number) {
+        this.isInvincible = true;
+        this.invincibleTimer = duration;
     }
 
     private restartGame(): void {
@@ -429,10 +451,12 @@ export default class Game extends Phaser.Scene {
         this.projectiles.clear(true, true);
 
         this.player.setPosition(this.screenSize.width / 2, this.screenSize.height / 2);
+        this.playerHealth = 3;
 
         this.physics.resume();
 
         this.isPaused = false;
+        this.setInvincible(this.initInvincibleDuration);
     }
 
     private playNextTrack() {
