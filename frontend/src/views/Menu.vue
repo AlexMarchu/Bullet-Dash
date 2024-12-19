@@ -7,6 +7,8 @@
             :key="index"
             :class="['menu-item', { active: currentIndex === index }]"
             @click="selectItem(index)"
+            @focus="playSound"
+            @mouseover="playSound"
         >
         {{ item.label }}
         </div>
@@ -64,9 +66,11 @@ export default {
         },
         handleKeyDown(event) {
             if (event.key === "ArrowDown" || event.key === "s") {
+                this.playSound();
                 this.currentIndex = (this.currentIndex + 1) % this.menuItems.length;
             } else if (event.key === "ArrowUp" || event.key === "w") {
                 this.currentIndex = (this.currentIndex - 1 + this.menuItems.length) % this.menuItems.length;
+                this.playSound();
             } else if (event.key === "Enter" || event.key === " ") {
                 this.menuItems[this.currentIndex].action();
             }

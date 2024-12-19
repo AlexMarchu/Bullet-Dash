@@ -3,8 +3,8 @@
     <div id="lose-title">You lose!</div>
     <div id="score-title">Your score: {{ score }}</div>
     <div id="buttons-wrapper">
-    <button @click="playAgain">Play again</button>
-    <button @click="toMenu">To menu</button>
+    <button @click="playAgain" @mouseover="playSound">Play again</button>
+    <button @click="toMenu" @mouseover="playSound">To menu</button>
     </div>
 </div>
 </template>
