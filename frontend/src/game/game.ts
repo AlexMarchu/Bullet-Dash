@@ -161,14 +161,20 @@ export class Attacks {
             this.shootCooldown = this.scene.time.now;
 
             const startPoints = [
-                { x: screenSize.width / 2, y: screenSize.height / 2 },
                 { x: screenSize.width / 4, y: screenSize.height / 4 },
                 { x: screenSize.width / 4 * 3, y: screenSize.height / 4 },
                 { x: screenSize.width / 4, y: screenSize.height / 4 * 3 },
                 { x: screenSize.width / 4 * 3, y: screenSize.height / 4 * 3 }
             ];
     
-            const startPoint = Phaser.Utils.Array.GetRandom(startPoints);
+            let startPoint = Phaser.Utils.Array.GetRandom(startPoints);
+
+            let distance = Phaser.Math.Distance.Between(startPoint.x, startPoint.y, player.x, player.y);
+
+            while (distance < Math.min(screenSize.width, screenSize.height) / 5) {
+                startPoint = Phaser.Utils.Array.GetRandom(startPoints);
+                distance = Phaser.Math.Distance.Between(startPoint.x, startPoint.y, player.x, player.y);
+            }
     
             for (let i = 0; i < 5; ++i) {
                 const angle = Phaser.Math.DegToRad(Phaser.Math.Between(0, 360));
@@ -352,7 +358,7 @@ export default class Game extends Phaser.Scene {
             this.sound.add("Game-On-by-Tricycle", { loop: false, volume: this.defaultMusicVolume }),
             this.sound.add("Moving-to-Miami", { loop: false, volume: this.defaultMusicVolume }),
             this.sound.add("Press-X-Twice", { loop: false, volume: this.defaultMusicVolume }),
-            this.sound.add("Racing-Hearts", { loop: false, volume: this.defaultMusicVolume }),
+            this.sound.add("Racing-Hearts", { loop: false, volume: this.defaultMusicVolume * 0.7 }),
             this.sound.add("Soon", { loop: false, volume: this.defaultMusicVolume }),
             this.sound.add("Tiger-Tracks", { loop: false, volume: this.defaultMusicVolume }),
             this.sound.add("Time-By-Several-Definitions", { loop: false, volume: this.defaultMusicVolume }),
