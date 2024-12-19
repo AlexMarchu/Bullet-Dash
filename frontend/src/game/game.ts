@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 
 export class Attacks {
-    private scene: Phaser.Scene;
+    private scene: Game;
     private attackTimer: number = 0;
     private shootCooldown: number = 0;
     private currentPattern: number = 0;
@@ -10,9 +10,8 @@ export class Attacks {
     private hardModeTimer: number = 0;
     private extraAttacks: number = 0;
     private offset: number = 0;
-    private projectiles: Projectile[] = [];
 
-    constructor(scene: Phaser.Scene) {
+    constructor(scene: Game) {
         this.scene = scene;
     }
 
@@ -24,13 +23,6 @@ export class Attacks {
             this.currentPattern = this.nextPattern;
             this.nextPattern = Phaser.Math.Between(0, 4);
 
-            // if (!this.hardMode && Phaser.Math.Between(0, 5) === 0) {
-            //     this.hardMode = true;
-            //     this.hardModeTimer = this.scene.time.now;
-            //     if (player.body instanceof Phaser.Physics.Arcade.Body) {
-            //         this.extraAttacks = Math.floor(player.body.speed / 20);
-            //     }
-            // }
             this.hardMode = true;
         }
 
@@ -56,68 +48,63 @@ export class Attacks {
                 this.networkAttack(screenSize, player);
                 break;
         }
-
-        for (let i = this.projectiles.length - 1; i >= 0; i--) {
-            const projectile = this.projectiles[i];
-            projectile.update(screenSize);
-
-            if (projectile.offScreen(screenSize)) {
-                this.projectiles.splice(i, 1);
-            }
-        }
     }
 
     private radialAttack(screenSize: { width: number; height: number }) {
         if (this.scene.time.now - this.shootCooldown > 250) {
+            console.log("CREATING");
+            this.shootCooldown = this.scene.time.now;
+
             for (let i = 0; i < 16 + this.extraAttacks; i++) {
                 const angle = Phaser.Math.DegToRad((360 / (12 + this.extraAttacks)) * i + this.offset);
                 const x = screenSize.width / 2;
                 const y = screenSize.height / 2;
-                const endX = x + Math.cos(angle) * 100;
-                const endY = y + Math.sin(angle) * 100;
-
-                this.projectiles.push(new Projectile(this.scene, x, y, "fireball", new Phaser.Math.Vector2(endX, endY), 10));
+                const direction = new Phaser.Math.Vector2(Math.cos(angle), Math.sin(angle));
+    
+                const projectile = new Projectile(this.scene, x, y, "fireball", direction, 10);
+                this.scene.projectiles.add(projectile);
             }
             this.offset += 10;
-            this.shootCooldown = this.scene.time.now;
         }
     }
 
     private arrowAttack(screenSize: { width: number; height: number }) {
         if (this.scene.time.now - this.shootCooldown > 500) {
+            this.shootCooldown = this.scene.time.now;
+
             const direction = Phaser.Math.Between(0, 3);
             for (let i = 0; i < Phaser.Math.Between(2, 8 + this.extraAttacks); i++) {
-                let x = 0, y = 0, endX = 0, endY = 0;
+                let x = 0, y = 0;
+                let directionVector: Phaser.Math.Vector2;
+    
                 if (direction === 0) {
                     x = Phaser.Math.Between(0, screenSize.width);
                     y = 0;
-                    endX = x;
-                    endY = 100;
+                    directionVector = new Phaser.Math.Vector2(0, 1);
                 } else if (direction === 1) {
                     x = Phaser.Math.Between(0, screenSize.width);
                     y = screenSize.height;
-                    endX = x;
-                    endY = screenSize.height - 100;
+                    directionVector = new Phaser.Math.Vector2(0, -1);
                 } else if (direction === 2) {
                     x = 0;
                     y = Phaser.Math.Between(0, screenSize.height);
-                    endX = 100;
-                    endY = y;
+                    directionVector = new Phaser.Math.Vector2(1, 0);
                 } else {
                     x = screenSize.width;
                     y = Phaser.Math.Between(0, screenSize.height);
-                    endX = screenSize.width - 100;
-                    endY = y;
+                    directionVector = new Phaser.Math.Vector2(-1, 0);
                 }
-
-                this.projectiles.push(new Projectile(this.scene, x, y, "arrow", new Phaser.Math.Vector2(endX, endY), 15));
+    
+                const projectile = new Projectile(this.scene, x, y, "arrow", directionVector, 15);
+                this.scene.projectiles.add(projectile);
             }
-            this.shootCooldown = this.scene.time.now;
         }
     }
 
     private edgeAttack(screenSize: { width: number; height: number }) {
         if (this.scene.time.now - this.shootCooldown > 500) {
+            this.shootCooldown = this.scene.time.now;
+
             const centerX = screenSize.width / 2;
             const centerY = screenSize.height / 2;
     
@@ -127,17 +114,18 @@ export class Attacks {
                 const startX = centerX + Math.cos(angle) * radius;
                 const startY = centerY + Math.sin(angle) * radius;
     
-                const endX = startX + Math.cos(angle) * 200;
-                const endY = startY + Math.sin(angle) * 200;
+                const direction = new Phaser.Math.Vector2(Math.cos(angle), Math.sin(angle));
     
-                this.projectiles.push(new Projectile(this.scene, startX, startY, "fireball", new Phaser.Math.Vector2(endX, endY), 10));
+                const projectile = new Projectile(this.scene, startX, startY, "fireball", direction, 10);
+                this.scene.projectiles.add(projectile);
             }
-            this.shootCooldown = this.scene.time.now;
         }
     }
 
     private homingAttack(screenSize: { width: number; height: number }, player: Phaser.Physics.Arcade.Sprite) {
         if (this.scene.time.now - this.shootCooldown > 1000) {
+            this.shootCooldown = this.scene.time.now;
+
             const allPoints = [
                 { x: 0, y: 0 },
                 { x: screenSize.width / 4, y: 0 },
@@ -155,22 +143,24 @@ export class Attacks {
                 { x: 0, y: screenSize.height / 2 },
                 { x: 0, y: screenSize.height / 4 },
             ];
-
+    
             const shuffledPoints = Phaser.Utils.Array.Shuffle(allPoints);
             const spawnPoints = shuffledPoints.slice(0, Math.floor(shuffledPoints.length / 3));
     
             for (let i = 0; i < spawnPoints.length; ++i) {
                 const { x, y } = spawnPoints[i];
-                const target = new Phaser.Math.Vector2(player.x, player.y);
-                this.projectiles.push(new Projectile(this.scene, x, y, "pink_arrow", target, 15));
-            }
+                const direction = new Phaser.Math.Vector2(player.x - x, player.y - y).normalize();
     
-            this.shootCooldown = this.scene.time.now;
+                const projectile = new Projectile(this.scene, x, y, "pink_arrow", direction, 15);
+                this.scene.projectiles.add(projectile);
+            }
         }
     }
 
     private networkAttack(screenSize: { width: number; height: number }, player: Phaser.Physics.Arcade.Sprite) {
         if (this.scene.time.now - this.shootCooldown > 600) {
+            this.shootCooldown = this.scene.time.now;
+
             const startPoints = [
                 { x: screenSize.width / 2, y: screenSize.height / 2 },
                 { x: screenSize.width / 4, y: screenSize.height / 4 },
@@ -178,79 +168,59 @@ export class Attacks {
                 { x: screenSize.width / 4, y: screenSize.height / 4 * 3 },
                 { x: screenSize.width / 4 * 3, y: screenSize.height / 4 * 3 }
             ];
-
+    
             const startPoint = Phaser.Utils.Array.GetRandom(startPoints);
-
+    
             for (let i = 0; i < 5; ++i) {
-                const angle =  Phaser.Math.DegToRad(Phaser.Math.Between(0, 360));
+                const angle = Phaser.Math.DegToRad(Phaser.Math.Between(0, 360));
                 const offset = 135 * Math.sin(i * (2 * Math.PI / 5));
                 const x = startPoint.x + offset * Math.cos(angle);
                 const y = startPoint.y / 2 + offset * Math.sin(angle);
-                const target = new Phaser.Math.Vector2(player.x, player.y);
-
-                this.projectiles.push(new Projectile(this.scene, x, y, "fireball", target, 10));
+    
+                const direction = new Phaser.Math.Vector2(player.x - x, player.y - y).normalize();
+    
+                const projectile = new Projectile(this.scene, x, y, "fireball", direction, 10);
+                this.scene.projectiles.add(projectile);
             }
-
-            this.shootCooldown = this.scene.time.now;
         }
     }
 }
 
-class Projectile {
-    x: number;
-    y: number;
-    obsType: string;
-    img: Phaser.Physics.Arcade.Image;
-    speed: number;
-    startVector: Phaser.Math.Vector2;
-    endVector: Phaser.Math.Vector2;
-    rotation: number;
-    size: number;
-    offscreenDisable: boolean;
+class Projectile extends Phaser.Physics.Arcade.Image {
+    public speed: number;
+    public direction: Phaser.Math.Vector2;
 
     constructor(
-        scene: Phaser.Scene,
+        scene: Game,
         x: number,
         y: number,
         obsType: string,
-        endLoc: Phaser.Math.Vector2,
+        direction: Phaser.Math.Vector2,
         speed: number,
         size: number = 1,
         offscreenDisable: boolean = false
     ) {
-        this.x = x;
-        this.y = y;
-        this.obsType = obsType;
+        super(scene, x, y, obsType);
+        scene.add.existing(this);
+        scene.physics.world.enable(this);
+        this.setScale(size);
         this.speed = speed / 3;
-        this.size = size;
-        this.offscreenDisable = offscreenDisable;
+        this.direction = direction.normalize();
 
-        this.img = scene.physics.add.image(x, y, obsType).setScale(size);
-        this.startVector = new Phaser.Math.Vector2(x, y);
-        this.endVector = endLoc;
-
-        this.rotation = Math.atan2(endLoc.y - y, endLoc.x - x);
-        this.img.setRotation(this.rotation);
+        const rotation = Math.atan2(direction.y, direction.x);
+        this.setRotation(rotation);
     }
 
     move(): void {
-        const velocity = this.endVector
-            .clone()
-            .subtract(this.startVector)
-            .normalize()
-            .scale(this.speed);
-
-        this.x += velocity.x;
-        this.y += velocity.y;
-
-        this.img.setPosition(this.x, this.y);
+        this.x += this.direction.x * this.speed;
+        this.y += this.direction.y * this.speed;
     }
 
     offScreen(screenSize: { width: number; height: number }): boolean {
         return (
-            this.x < -this.img.displayWidth ||
+            this.x < -this.displayWidth ||
             this.x > screenSize.width ||
-            this.y < -this.img.displayHeight ||
+            this.y < -this.displayHeight ||
             this.y > screenSize.height
         );
     }
@@ -259,12 +229,6 @@ class Projectile {
         this.move();
         if (this.offScreen(screenSize)) {
             this.destroy();
-        }
-    }
-
-    destroy(): void {
-        if (this.img) {
-            this.img.destroy();
         }
     }
 }
@@ -279,7 +243,7 @@ export default class Game extends Phaser.Scene {
     private keyLeft!: Phaser.Input.Keyboard.Key;
     private keyDown!: Phaser.Input.Keyboard.Key;
     private keyRight!: Phaser.Input.Keyboard.Key;
-    private projectiles!: Phaser.Physics.Arcade.Group;
+    public projectiles!: Phaser.Physics.Arcade.Group;
     private screenSize!: { width: number; height: number };
     private playerSpeed: number = 4;
     private attacks!: Attacks;
@@ -377,11 +341,11 @@ export default class Game extends Phaser.Scene {
             this.sound.add("Press-X-Twice", { loop: false, volume: this.defaultMusicVolume }),
             this.sound.add("Racing-Hearts", { loop: false, volume: this.defaultMusicVolume }),
             this.sound.add("Soon", { loop: false, volume: this.defaultMusicVolume }),
-            this.sound.add("Tiger-Tracks", { loop: false, volume: this.defaultMusicVolume} ),
+            this.sound.add("Tiger-Tracks", { loop: false, volume: this.defaultMusicVolume }),
             this.sound.add("Time-By-Several-Definitions", { loop: false, volume: this.defaultMusicVolume }),
             this.sound.add("Virtual", { loop: false, volume: this.defaultMusicVolume })
         ];
-        
+
         Phaser.Utils.Array.Shuffle(this.musicTracks);
         this.currentTrackIndex = Phaser.Math.Between(0, this.musicTracks.length - 1);
         this.playNextTrack();
@@ -399,17 +363,14 @@ export default class Game extends Phaser.Scene {
 
         this.attacks.update(this.player, this.screenSize);
 
-        this.projectiles.getChildren().forEach((projectile: Phaser.GameObjects.GameObject) => {
-            if (projectile instanceof Phaser.Physics.Arcade.Image) {
-                const proj = projectile as any;
-                proj.move();
-
-                if (proj.offScreen(this.screenSize)) {
-                    this.projectiles.remove(projectile, true, true);
-                }
+        this.projectiles.getChildren().forEach((projectile) => {
+            (projectile as Projectile).update(this.screenSize);
+            
+            if ((projectile as Projectile).offScreen(this.screenSize)) {
+                this.projectiles.remove(projectile, true, true);
             }
         });
-        
+
         this.timeElapsed++;
         this.scoreText.text = `${this.getScore()}`;
     }
@@ -433,28 +394,28 @@ export default class Game extends Phaser.Scene {
     }
 
     private handleCollision(player: Phaser.Types.Physics.Arcade.GameObjectWithBody, projectile: Phaser.Types.Physics.Arcade.GameObjectWithBody) {
-        console.log(this.player.body);
-        console.log(projectile.body);
-        console.log("Collision triggered", player, projectile);
+        // console.log(this.player.body);
+        // console.log(projectile.body);
+        // console.log("Collision triggered", player, projectile);
 
-        if (projectile instanceof Phaser.Physics.Arcade.Image) {
-            projectile.destroy();
+        // if (projectile instanceof Phaser.Physics.Arcade.Image) {
+        //     projectile.destroy();
 
-            console.log("Collision detected!");
-            this.physics.pause();
-            this.isPaused = true;
+        //     console.log("Collision detected!");
+        //     this.physics.pause();
+        //     this.isPaused = true;
 
-            this.pauseText = this.add.text(
-                this.screenSize.width / 2,
-                this.screenSize.height / 2,
-                "Game over\nPress space", {
-                    font: "48px Arial", color: "#ffffff", align: "center" }
-            ).setOrigin(0.5);
+        //     this.pauseText = this.add.text(
+        //         this.screenSize.width / 2,
+        //         this.screenSize.height / 2,
+        //         "Game over\nPress space", {
+        //             font: "48px Arial", color: "#ffffff", align: "center" }
+        //     ).setOrigin(0.5);
 
-            if (this.currentTrack) {
-                this.currentTrack.stop();
-            }
-        }
+        //     if (this.currentTrack) {
+        //         this.currentTrack.stop();
+        //     }
+        // }
     }
 
     private restartGame(): void {
@@ -495,4 +456,4 @@ export default class Game extends Phaser.Scene {
             this.playNextTrack();
         });
     }
-}
+}   
