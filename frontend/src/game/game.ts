@@ -274,7 +274,6 @@ export default class Game extends Phaser.Scene {
         this.load.image("fireball", require("@/assets/fireball.png"));
         this.load.image("arrow", require("@/assets/arrow.png"));
         this.load.image("pink_arrow", require("@/assets/pink_arrow.png"));
-        this.load.image("heart", require("@/assets/heart.png"));
 
         this.load.audio("Albatros", "../src/assets/music/Albatros.mp3");
         this.load.audio("Blip-Master", "../src/assets/music/Blip-Master.mp3");
