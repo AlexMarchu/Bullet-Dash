@@ -13,12 +13,8 @@
 export default {
     data() {
         return {
-            score: 0
+            score: window.recentScore
         };
-    },
-    mounted() {
-        // this.score = inject("recentScore");
-        // console.log(this.score);
     },
     methods: {
         playAgain() {
@@ -35,9 +31,7 @@ export default {
 #wrapper {
     display: flex;
     flex-direction: column;
-    row-gap: 6px;
     align-items: center;
-    justify-items: center;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -52,7 +46,7 @@ export default {
 }
 
 #score-title {
-    font-size: 30px;
+    font-size: 28px;
 }
 
 #buttons-wrapper {
@@ -60,7 +54,6 @@ export default {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-items: center;
 }
 
 button {

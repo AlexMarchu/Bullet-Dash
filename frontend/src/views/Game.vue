@@ -51,6 +51,7 @@ export default {
         onLose() {
             const score = this.game.scene.getScene('Game').getScore();
             authService.updateUserScore(score);
+            window.recentScore = score;
             this.game.destroy();
             this.$router.push("/lose");
         }
