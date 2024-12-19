@@ -10,19 +10,36 @@
 </template>
 
 <script>
+import navigationSound from '../assets/sounds/navigation_1.mp3';
+
 export default {
     data() {
         return {
-            score: window.recentScore
+            score: window.recentScore,
+            audio: null,
         };
     },
     methods: {
+        loadAudio() {
+            this.audio = new Audio(navigationSound);
+        },
+        playSound() {
+            if (this.audio) {
+                this.audio.currentTime = 0;
+                this.audio.play();
+            }
+        },
         playAgain() {
+            this.playSound();
             this.$router.push("/game");
         },
         toMenu() {
+            this.playSound();
             this.$router.push("/menu");
         }
+    },
+    mounted() {
+        this.loadAudio();
     },
 };
 </script>

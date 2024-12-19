@@ -15,6 +15,9 @@
 </template>
 
 <script>
+import navigationSound from '../assets/sounds/navigation_1.mp3';
+console.log(navigationSound);
+
 export default {
     data() {
         return {
@@ -25,13 +28,26 @@ export default {
                 { label: "Quit Game", action: this.quit },
             ],
             currentIndex: 0,
+            audio: null,
         };
     },
     methods: {
+        loadAudio() {
+            this.audio = new Audio(navigationSound);
+        },
+        playSound() {
+            if (this.audio) {
+                this.audio.currentTime = 0;
+                this.audio.play();
+            }
+        },
         startGame() {
+            this.playSound();
+            console.log("sound play");
             this.$router.push("/game");
         },
         openRating() {
+            this.playSound();
             this.$router.push("/rating");
         },
         logout() {
@@ -57,6 +73,7 @@ export default {
         },
     },
     mounted() {
+        this.loadAudio();
         window.addEventListener("keydown", this.handleKeyDown);
     },
     beforeUnmount() {
