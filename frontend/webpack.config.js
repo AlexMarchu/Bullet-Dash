@@ -24,17 +24,18 @@ module.exports = {
                 test: /\.vue$/,
                 loader: "vue-loader",
             },
-            {
-                test: /\.(mp3|wav)$/,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: 'assets/music/[name].[ext]'
-                        }
-                    }
-                ]
-            }
+            // {
+            //     test: /\.(mp3|wav)$/,
+            //     loader: 'file-loader',
+            //     use: [
+            //         {
+            //             loader: 'file-loader',
+            //             options: {
+            //                 name: 'assets/music/[name].[ext]',
+            //             }
+            //         }
+            //     ]
+            // }
         ],
     },
     plugins: [new VueLoaderPlugin()],

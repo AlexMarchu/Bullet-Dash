@@ -280,21 +280,36 @@ export default class Game extends Phaser.Scene {
         this.load.image("fireball", require("@/assets/fireball.png"));
         this.load.image("arrow", require("@/assets/arrow.png"));
         this.load.image("pink_arrow", require("@/assets/pink_arrow.png"));
+    
+        // this.load.audio("Albatros", require("@/assets/music/Albatros.mp3"));
+        // this.load.audio("Blip-Master", require("@/assets/music/Blip-Master.mp3"));
+        // this.load.audio("Bit-Fight11", require("@/assets/music/Bit-Fight11.mp3"));
+        // this.load.audio("Dreamz", require("@/assets/music/Dreamz.mp3"));
+        // this.load.audio("Fair-N-Square", require("@/assets/music/Fair-N-Square.mp3"));
+        // this.load.audio("Game-On-by-Tricycle", require("@/assets/music/Game-On-by-Tricycle.mp3"));
+        // this.load.audio("Moving-to-Miami", require("@/assets/music/Moving-to-Miami.mp3"));
+        // this.load.audio("Press-X-Twice", require("@/assets/music/Press-X-Twice.mp3"));
+        // this.load.audio("Racing-Hearts", require("@/assets/music/Racing-Hearts.mp3"));
+        // this.load.audio("Soon", require("@/assets/music/Soon.mp3"));
+        // this.load.audio("Tiger-Tracks", require("@/assets/music/Tiger-Tracks.mp3"));
+        // this.load.audio("Time-By-Several-Definitions", require("@/assets/music/Time-By-Several-Definitions.mp3"));
+        // this.load.audio("Virtual", require("@/assets/music/Virtual.mp3"));
+        // this.load.audio("Damage", require("@/assets/sounds/damage.wav"));
 
-        this.load.audio("Albatros", "../src/assets/music/Albatros.mp3");
-        this.load.audio("Blip-Master", "../src/assets/music/Blip-Master.mp3");
-        this.load.audio("Bit-Fight11", "../src/assets/music/Bit-Fight11.mp3");
-        this.load.audio("Dreamz", "../src/assets/music/Dreamz.mp3");
-        this.load.audio("Fair-N-Square", "../src/assets/music/Fair-N-Square.mp3");
-        this.load.audio("Game-On-by-Tricycle", "../src/assets/music/Game-On-by-Tricycle.mp3");
-        this.load.audio("Moving-to-Miami", "../src/assets/music/Moving-to-Miami.mp3");
-        this.load.audio("Press-X-Twice", "../src/assets/music/Press-X-Twice.mp3");
-        this.load.audio("Racing-Hearts", "../src/assets/music/Racing-Hearts.mp3");
-        this.load.audio("Soon", "../src/assets/music/Soon.mp3");
-        this.load.audio("Tiger-Tracks", "../src/assets/music/Tiger-Tracks.mp3");
-        this.load.audio("Time-By-Several-Definitions", "../src/assets/music/Time-By-Several-Definitions.mp3");
-        this.load.audio("Virtual", "../src/assets/music/Virtual.mp3");
-        this.load.audio("Damage", "../src/assets/sounds/damage.wav");
+        // this.load.audio("Albatros", "../src/assets/music/Albatros.mp3");
+        // this.load.audio("Blip-Master", "../src/assets/music/Blip-Master.mp3");
+        // this.load.audio("Bit-Fight11", "../src/assets/music/Bit-Fight11.mp3");
+        // this.load.audio("Dreamz", "../src/assets/music/Dreamz.mp3");
+        // this.load.audio("Fair-N-Square", "../src/assets/music/Fair-N-Square.mp3");
+        // this.load.audio("Game-On-by-Tricycle", "../src/assets/music/Game-On-by-Tricycle.mp3");
+        // this.load.audio("Moving-to-Miami", "../src/assets/music/Moving-to-Miami.mp3");
+        // this.load.audio("Press-X-Twice", "../src/assets/music/Press-X-Twice.mp3");
+        // this.load.audio("Racing-Hearts", "../src/assets/music/Racing-Hearts.mp3");
+        // this.load.audio("Soon", "../src/assets/music/Soon.mp3");
+        // this.load.audio("Tiger-Tracks", "../src/assets/music/Tiger-Tracks.mp3");
+        // this.load.audio("Time-By-Several-Definitions", "../src/assets/music/Time-By-Several-Definitions.mp3");
+        // this.load.audio("Virtual", "../src/assets/music/Virtual.mp3");
+        // this.load.audio("Damage", "../src/assets/sounds/damage.wav");
     }
 
     create() {
@@ -349,25 +364,25 @@ export default class Game extends Phaser.Scene {
             this
         );
 
-        this.musicTracks = [
-            this.sound.add("Albatros", { loop: false, volume: this.defaultMusicVolume }),
-            this.sound.add("Blip-Master", { loop: false, volume: this.defaultMusicVolume }),
-            this.sound.add("Bit-Fight11", { loop: false, volume: this.defaultMusicVolume }),
-            this.sound.add("Dreamz", { loop: false, volume: this.defaultMusicVolume }),
-            this.sound.add("Fair-N-Square", { loop: false, volume: this.defaultMusicVolume }),
-            this.sound.add("Game-On-by-Tricycle", { loop: false, volume: this.defaultMusicVolume }),
-            this.sound.add("Moving-to-Miami", { loop: false, volume: this.defaultMusicVolume }),
-            this.sound.add("Press-X-Twice", { loop: false, volume: this.defaultMusicVolume }),
-            this.sound.add("Racing-Hearts", { loop: false, volume: this.defaultMusicVolume * 0.7 }),
-            this.sound.add("Soon", { loop: false, volume: this.defaultMusicVolume }),
-            this.sound.add("Tiger-Tracks", { loop: false, volume: this.defaultMusicVolume }),
-            this.sound.add("Time-By-Several-Definitions", { loop: false, volume: this.defaultMusicVolume }),
-            this.sound.add("Virtual", { loop: false, volume: this.defaultMusicVolume })
-        ];
+        // this.musicTracks = [
+        //     this.sound.add("Albatros", { loop: false, volume: this.defaultMusicVolume }),
+        //     this.sound.add("Blip-Master", { loop: false, volume: this.defaultMusicVolume }),
+        //     this.sound.add("Bit-Fight11", { loop: false, volume: this.defaultMusicVolume }),
+        //     this.sound.add("Dreamz", { loop: false, volume: this.defaultMusicVolume }),
+        //     this.sound.add("Fair-N-Square", { loop: false, volume: this.defaultMusicVolume }),
+        //     this.sound.add("Game-On-by-Tricycle", { loop: false, volume: this.defaultMusicVolume }),
+        //     this.sound.add("Moving-to-Miami", { loop: false, volume: this.defaultMusicVolume }),
+        //     this.sound.add("Press-X-Twice", { loop: false, volume: this.defaultMusicVolume }),
+        //     this.sound.add("Racing-Hearts", { loop: false, volume: this.defaultMusicVolume * 0.7 }),
+        //     this.sound.add("Soon", { loop: false, volume: this.defaultMusicVolume }),
+        //     this.sound.add("Tiger-Tracks", { loop: false, volume: this.defaultMusicVolume }),
+        //     this.sound.add("Time-By-Several-Definitions", { loop: false, volume: this.defaultMusicVolume }),
+        //     this.sound.add("Virtual", { loop: false, volume: this.defaultMusicVolume })
+        // ];
 
-        Phaser.Utils.Array.Shuffle(this.musicTracks);
-        this.currentTrackIndex = Phaser.Math.Between(0, this.musicTracks.length - 1);
-        this.playNextTrack();
+        // Phaser.Utils.Array.Shuffle(this.musicTracks);
+        // this.currentTrackIndex = Phaser.Math.Between(0, this.musicTracks.length - 1);
+        // this.playNextTrack();
 
         this.setInvincible(this.initInvincibleDuration);
     }
@@ -430,7 +445,7 @@ export default class Game extends Phaser.Scene {
             return;
         }
         if (projectile instanceof Projectile) {
-            this.sound.play("Damage", { volume: this.defaultMusicVolume });
+            // this.sound.play("Damage", { volume: this.defaultMusicVolume });
             projectile.destroy();
             this.setInvincible(this.invincibleDuration);
             this.playerHealth = Math.max(this.playerHealth - 1, 0);
